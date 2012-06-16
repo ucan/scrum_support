@@ -14,6 +14,7 @@ gem 'pivotal-tracker', '0.5.4'
 # Development tools
 group :development, :test do
 	gem 'rspec-rails', '2.10.0'
+	gem 'capybara', '1.1.2'
 end
 
 
