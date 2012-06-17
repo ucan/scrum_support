@@ -15,6 +15,6 @@ describe Project do
 
     subject { @project } 
     it { should respond_to(:title) } 
-    it { should be_valid }  
+    it { should be_valid }
 end
 

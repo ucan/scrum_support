@@ -5,7 +5,7 @@ require 'project'
 describe Story do
 
 	before(:each) do
-	    @story = Story.new(title: "Test Story", project_id: Project.new(title: "Test Project").id)
+	    @story = Story.new(title: "Test Story", project: Project.new(title: "Test Project"))
 	end
  
     it "should not be valid without a title" do
