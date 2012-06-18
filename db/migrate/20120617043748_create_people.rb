@@ -4,7 +4,7 @@ class CreatePeople < ActiveRecord::Migration
       t.string :firstName
       t.string :lastName
       t.string :email
-      t.string :username
+      t.string :userName
 
       t.timestamps
     end

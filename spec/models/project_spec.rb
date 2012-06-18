@@ -10,6 +10,7 @@ describe Project do
 
     it "should not be valid without a title" do
     	@project.title = nil
+        @project.should have(1).error_on(:title)
     	@project.should_not be_valid
     end
 

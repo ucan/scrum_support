@@ -10,11 +10,13 @@ describe Story do
  
     it "should not be valid without a title" do
     	@story.title = nil
+        @story.should have(1).error_on(:title)
     	@story.should_not be_valid 
     end
 
     it "should not be valid without a project" do
     	@story.project = nil
+        @story.should have(1).error_on(:project)
     	@story.should_not be_valid 
     end
 
