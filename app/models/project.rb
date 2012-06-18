@@ -1,7 +1,8 @@
 class Project < ActiveRecord::Base
   attr_accessible :title
 
-  has_many :storys
+  has_many :storys, :uniq => true
+  has_many :memberships, :uniq => true
 
   validates_presence_of :title
 
