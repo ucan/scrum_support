@@ -15,11 +15,19 @@ gem 'pivotal-tracker', '0.5.4'
 group :test, :development do
   gem 'rspec-rails', '2.10.0'
   gem 'capybara', '1.1.2'
-  gem 'rb-inotify', '0.8.8'
-  gem 'libnotify', '0.5.9'
   gem 'guard-spork', '0.3.2'
   gem 'spork', '0.9.0'
   gem 'guard-rspec', '0.5.5'
+end
+
+if RUBY_PLATFORM.downcase.include?('linux')
+  gem 'libnotify', '0.5.9'
+  gem 'rb-inotify', '0.8.8'
+end
+
+if RUBY_PLATFORM.downcase.include?('darwin')
+  gem 'rb-fsevent', '0.9.1', :require => false
+  gem 'growl', '1.0.3'
 end
 
 
