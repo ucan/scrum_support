@@ -3,12 +3,13 @@ class Project < ActiveRecord::Base
 
   has_many :storys, :uniq => true
   has_many :memberships, :uniq => true
+  has_many :people, :through => :memberships, :uniq => true
 
   validates_presence_of :title
 
-  def initialize(attributes = {})
-  	super
-    @title = attributes[:title]
+  # def initialize(attributes = {})
+  # 	super
+  #   @title = attributes[:title]
 
     # PivotalTracker::Client.token = '79fecc5af7fb6eb27462f02be67b2d53'
     # projects = PivotalTracker::Project.all.each { |project| 
@@ -25,7 +26,7 @@ class Project < ActiveRecord::Base
     #   }
     #   puts
     # }
-  end
+  # end
 
   def to_s
   	@title

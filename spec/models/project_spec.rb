@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'project'
 require 'story'
+require 'membership'
 
 describe Project do
 
@@ -14,7 +15,7 @@ describe Project do
     it "should not be valid without a title" do
     	@project.title = nil
         @project.should have(1).error_on(:title)
-    	@project.should_not be_valid
+    	@project.should_not be_valid 
     end
 
     it "should be able to add 1 or more storys" do
@@ -24,12 +25,12 @@ describe Project do
         @project.storys << @story2
         @project.storys.should =~ [@story1, @story2]
     end
-
+ 
     it "should not be able to add a duplicate story" do
         @project.storys << @story1 << @story1
         @project.storys.length.should == 1
         @project.storys.should == [@story1]
-    end
+    end 
 
     it "should be able to remove 1 story" do
         @project.storys << @story1 << @story2
@@ -38,10 +39,23 @@ describe Project do
         @project.storys.should == [@story2]
     end
 
+    it "should create a new membership when a new person is added to a project" do
+        person = Person.new(firstName: "Dave", lastName: "White", email: "dkw38@uclive.ac.nz", userName: "dkw38")
+        person.save()
+        @project.people.should_not include(person)
+        @project.people = [person]
+        @project.people.should include(person)
+        @project.save()
+        @project.memberships.length.should == 1
+        @project.memberships.first.person.should eql person
+        @project.memberships.first.project.should eql @project
+    end
+
     subject { @project } 
-    it { should respond_to(:title) } 
+    it { should respond_to(:title) }  
     it { should respond_to(:storys) } 
-    it { should respond_to(:memberships) } 
+    it { should respond_to(:memberships) }
+    it { should respond_to(:people) }
     it { should be_valid }
 end
 

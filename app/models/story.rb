@@ -7,12 +7,6 @@ class Story < ActiveRecord::Base
   validates_associated :project
   validates_presence_of :project
 
-  def initialize(attributes = {})
-  	super
-  	@title = attributes[:title]
-  	@project = attributes[:project]
-  end
-
   def to_s
   	@title
   end
