@@ -4,5 +4,4 @@ class Person < ActiveRecord::Base
 
 	has_many :memberships, :uniq => true
 	has_many :projects, :through => :memberships, :uniq => true
-
 end
