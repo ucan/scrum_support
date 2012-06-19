@@ -5,6 +5,11 @@ require 'membership'
 
 describe Project do
 
+    before(:all) do
+        @person = Person.new(firstName: "Dave", lastName: "White", email: "dkw38@uclive.ac.nz", userName: "dkw38")
+        @person.save()
+    end
+
 	before(:each) do
 	    @project = Project.new(title: "Test Project") 
         
@@ -15,8 +20,8 @@ describe Project do
     it "should not be valid without a title" do
     	@project.title = nil
         @project.should have(1).error_on(:title)
-    	@project.should_not be_valid 
-    end
+    	@project.should_not be_valid
+    end 
 
     it "should be able to add 1 or more storys" do
         @project.storys.should be_empty
@@ -28,10 +33,10 @@ describe Project do
  
     it "should not be able to add a duplicate story" do
         @project.storys << @story1 << @story1
-        @project.storys.length.should == 1
-        @project.storys.should == [@story1]
-    end 
-
+        @project.storys.length.should == 1 
+        @project.storys.should == [@story1]   
+    end
+ 
     it "should be able to remove 1 story" do
         @project.storys << @story1 << @story2
         @project.storys.delete(@story1)
@@ -40,15 +45,20 @@ describe Project do
     end
 
     it "should create a new membership when a new person is added to a project" do
-        person = Person.new(firstName: "Dave", lastName: "White", email: "dkw38@uclive.ac.nz", userName: "dkw38")
-        person.save()
-        @project.people.should_not include(person)
-        @project.people = [person]
-        @project.people.should include(person)
+        @project.people.should_not include(@person)
+        @project.people = [@person]
+        @project.people.should include(@person)
         @project.save()
         @project.memberships.length.should == 1
-        @project.memberships.first.person.should eql person
-        @project.memberships.first.project.should eql @project
+        @project.memberships.first.person.should eql @person
+        @project.memberships.first.project.should eql @project 
+    end
+
+    it "should throw a RecordInvalid error if a duplicate person is added to a project" do
+        @project.people.should_not include(@person)
+        @project.people = [@person]        
+        @project.save
+        lambda { @project.people << @person }.should raise_error(ActiveRecord::RecordInvalid)
     end
 
     subject { @project } 

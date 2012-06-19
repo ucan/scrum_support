@@ -20,6 +20,8 @@ ActiveRecord::Schema.define(:version => 20120618063051) do
     t.datetime "updated_at", :null => false
   end
 
+  add_index "memberships", ["project_id", "person_id"], :name => "index_memberships_on_project_id_and_person_id", :unique => true
+
   create_table "people", :force => true do |t|
     t.string   "firstName"
     t.string   "lastName"
