@@ -13,7 +13,7 @@ describe Person do
 
  		@project1 = Project.new(title: "Test Project 1")
 	    @project2 = Project.new(title: "Test Project 2")
-		@membership1 = Membership.new(person: @person, project: @project1)
+		@membership1 = Membership.new(person: @person, project: @project1)  
 	    @membership2 = Membership.new(person: @person, project: @project2)
 	end
 

@@ -5,5 +5,6 @@ class CreateMemberships < ActiveRecord::Migration
       	t.references :person
       	t.timestamps
     end
+    add_index :memberships, [ :project_id, :person_id ], :unique => true #prevents duplicates
   end
 end
