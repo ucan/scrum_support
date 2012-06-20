@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'story'
 require 'project'
+require 'task'
 
 describe Story do
 
@@ -18,6 +19,17 @@ describe Story do
     	@story.project = nil
         @story.should have(1).error_on(:project)
     	@story.should_not be_valid 
+    end
+
+    it "should have tasks" do
+        @story.tasks.length.should eql 0
+        @story.save()
+        @task = Task.new(description: "Test Task One")
+        @task.save()
+        # TODO: Fix - this line shouldn't be needed.
+        @story.tasks << @task
+        @story.tasks.length.should eql 1
+        @story.tasks[0].story.should eql @story
     end
 
     subject { @story }

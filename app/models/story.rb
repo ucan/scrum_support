@@ -3,6 +3,8 @@ class Story < ActiveRecord::Base
 
   belongs_to :project
 
+  has_many :tasks, :uniq => true, :dependent => :destroy
+
   validates_presence_of :title
   validates_associated :project
   validates_presence_of :project
