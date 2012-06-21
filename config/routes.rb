@@ -1,6 +1,18 @@
 ScrumSupport::Application.routes.draw do
 
-  get "welcome/home"
+  get "/projects" => "project#list"
+  get "/projects/:id" => "project#show", :constrants => { :id => /\d+/ }
+
+  get "/user/create/:name" => "user#create"  #post?
+  get "/user/:id" => "user#show", :constrants => { :id => /\d+/ }
+
+  get "/account/pivotaltracker/create" => "account#create_pivotal_tracker"
+  get "/account/agilefant/create" => "account#create_agilefant"
+
+
+  get "/user/setup" => "user#setup" #add some shit to the db for testing purposes
+
+  
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

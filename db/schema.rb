@@ -11,7 +11,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120619095701) do
+ActiveRecord::Schema.define(:version => 20120621050054) do
+
+  create_table "accounts", :force => true do |t|
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "mappings", :force => true do |t|
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "memberships", :force => true do |t|
     t.integer  "project_id"
@@ -31,8 +42,23 @@ ActiveRecord::Schema.define(:version => 20120619095701) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "project_mappings", :force => true do |t|
+    t.integer  "linked_id"
+    t.integer  "account_id"
+    t.integer  "project_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "project_mappings", ["project_id", "linked_id"], :name => "index_project_mappings_on_project_id_and_linked_id", :unique => true
+
   create_table "projects", :force => true do |t|
     t.string   "title"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "pt_accounts", :force => true do |t|
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -53,5 +79,11 @@ ActiveRecord::Schema.define(:version => 20120619095701) do
   end
 
   add_index "tasks", ["story_id"], :name => "index_tasks_on_story_id"
+
+  create_table "users", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
 end
