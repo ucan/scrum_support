@@ -11,4 +11,8 @@ class Account < ActiveRecord::Base
     raise NotImplementedError.new
   end
 
+  def as_json(options = {})
+    super(:only => [:id])
+  end
+
 end

@@ -24,24 +24,24 @@ describe Project do
     end 
 
     it "should be able to add 1 or more storys" do
-        @project.storys.should be_empty
-        @project.storys << @story1
-        @project.storys.should =~ [@story1]
-        @project.storys << @story2
-        @project.storys.should =~ [@story1, @story2]
+        @project.stories.should be_empty
+        @project.stories << @story1
+        @project.stories.should =~ [@story1]
+        @project.stories << @story2
+        @project.stories.should =~ [@story1, @story2]
     end
  
     it "should not be able to add a duplicate story" do
-        @project.storys << @story1 << @story1
-        @project.storys.length.should == 1 
-        @project.storys.should == [@story1]   
+        @project.stories << @story1 << @story1
+        @project.stories.length.should == 1 
+        @project.stories.should == [@story1]   
     end
  
     it "should be able to remove 1 story" do
-        @project.storys << @story1 << @story2
-        @project.storys.delete(@story1)
-        @project.storys.should_not include(@story1)
-        @project.storys.should == [@story2]
+        @project.stories << @story1 << @story2
+        @project.stories.delete(@story1)
+        @project.stories.should_not include(@story1)
+        @project.stories.should == [@story2]
     end
 
     it "should create a new membership when a new person is added to a project" do
@@ -63,7 +63,7 @@ describe Project do
 
     subject { @project } 
     it { should respond_to(:title) }  
-    it { should respond_to(:storys) } 
+    it { should respond_to(:stories) } 
     it { should respond_to(:memberships) }
     it { should respond_to(:people) }
     it { should be_valid }

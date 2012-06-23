@@ -1,16 +1,34 @@
 ScrumSupport::Application.routes.draw do
 
-  get "/projects" => "project#list"
-  get "/projects/:id" => "project#show", :constrants => { :id => /\d+/ }
-
-  get "/user/create/:name" => "user#create"  #post?
-  get "/user/:id" => "user#show", :constrants => { :id => /\d+/ }
-
-  get "/account/pivotaltracker/create" => "account#create_pivotal_tracker"
-  get "/account/agilefant/create" => "account#create_agilefant"
+  devise_for :users, :skip => :sessions
 
 
-  get "/user/setup" => "user#setup" #add some shit to the db for testing purposes
+  root :to => "root#index"  #testing purposes...needed for devise?
+
+  
+  #get "/user/:id" => "user#show", :constraints => { :id => /\d+/ }
+  
+  post "/user" => "user#create"
+  get "/user" => "user#show" # use token for auth and user retrieval
+
+  
+  get "/accounts" => "accounts#list"
+  get "/accounts/:id" => "accounts#show"
+
+  post "/accounts" => "accounts#create" # post will contain the system to integrate with e.g type: "pt"
+
+  
+  get "/projects" => "projects#list"
+  get "/projects/:id" => "projects#show", :constraints => { :id => /\d+/ }
+
+  
+  get "/stories/:id" => "stories#show", :constraints => { :id => /\d+/ }
+  
+
+
+  #get "/project/:id/story" => "story#list_for_project", :constraints => { :id => /\d+/ }
+
+  # get "/user/setup" => "user#setup" #add some shit to the db for testing purposes
 
   
 

@@ -1,10 +1,14 @@
 source 'https://rubygems.org'
 
 gem 'rails', '3.2.6'
+gem 'rails-api'
 
 # Database
 #gem 'sqlite3', '1.3.6'
 gem 'pg', '0.12.2'
+
+#Authentication
+gem 'devise'
 
 # Project Management API wrappers
 gem 'pivotal-tracker', '0.5.4'
