@@ -1,6 +1,6 @@
 class AccountsController < ApplicationController
 
-  before_filter :authorised?
+  before_filter :authenticate
 
   # Returns a list of account ids
   def list
@@ -9,7 +9,7 @@ class AccountsController < ApplicationController
     render :json => accounts
   end
 
-  # Returns a list of account ids for the user
+  # Returns a list of projects for the user
   def show
     begin
       user = user_from_auth_token
@@ -18,7 +18,7 @@ class AccountsController < ApplicationController
       render :json => account.projects
 
     rescue ActiveRecord::RecordNotFound
-      render :json => {:error => I18n.t('request.forbidden') }, :status => 403 # Forbidden
+      render :json => {:error => I18n.t('request.forbidden') }, :status => :forbidden
     end
   end
 
@@ -26,10 +26,10 @@ class AccountsController < ApplicationController
   def create
     # check if we are creating a pt account
     if params[:type] == "pivotal_tracker"
-      user = User.find(params[:userid])
+      user = user_from_auth_token
       token = params[:token]
-      @ptAccount = PtAccount.new(token)
-      user.accounts << @ptAccount
+      ptAccount = PtAccount.new(token)
+      user.accounts << ptAccount
       user.save
     else
       # invalid params

@@ -15,11 +15,10 @@ describe UserController do
 		user = User.new(name: "Testy Kills")
 		user.save!
  
-		get :show, {:auth_token => [user.authentication_token]}  
+		get :show, { :auth_token => user.authentication_token }  
 
 		expected = user.to_json
 		result = ActiveSupport::JSON.decode(response.body)
 		ActiveSupport::JSON.decode(expected).should eql result
 	end
-
 end

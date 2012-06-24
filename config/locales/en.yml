@@ -3,4 +3,5 @@
 
 en:
   request:
-    forbidden: "Cannot access the resource requested, the user does not have access to it."
+    unauthorized: "User is not authenticated" #401 :unauthorized
+    forbidden: "Cannot access the resource requested, the user does not have access to it." #403 :forbidden

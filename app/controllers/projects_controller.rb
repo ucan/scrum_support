@@ -1,6 +1,6 @@
 class ProjectsController < ApplicationController
 	
-	before_filter :authorised?
+	before_filter :authenticate
 
 	# Return a list of all project ids (from all accounts)
 	def list
@@ -21,7 +21,7 @@ class ProjectsController < ApplicationController
 		if project.account.user == user
 			render :json => project.stories
 		else
-			render :json => {:error => I18n.t('request.forbidden') }, :status => 403 # Forbidden
+			render :json => {:error => I18n.t('request.forbidden') }, :status => :forbidden
 		end
 	end
 end

@@ -1,25 +1,14 @@
 class StoriesController < ApplicationController
 	
-	# before_filter :authenticate_user!
-
-	
+	before_filter :authenticate
 
 	def show
-		@story = Story.find(params[:id])
-		
-		# respond_to do |format|
-		# 	format.html
-		# 	format.json  { render :json; @story.to_json }
-		# end
-	end
-
-	def list_for_project
-		project = Project.find(params[:id])
-		@storys = project.storys
-		
-		# respond_to do |format|
-		# 	format.html {render :list, :storys => @storys}
-		# 	format.json  { render :json; @storys }
-		# end
+		user = user_from_auth_token
+		story = Story.find(params[:id])
+		if story.project.account.user == user
+			render :json => story.tasks
+		else
+			render :json => {:error => I18n.t('request.forbidden') }, :status => :forbidden
+		end
 	end
 end

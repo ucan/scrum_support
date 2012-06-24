@@ -5,23 +5,24 @@ ScrumSupport::Application.routes.draw do
 
   root :to => "root#index"  #testing purposes...needed for devise?
 
-  
-  #get "/user/:id" => "user#show", :constraints => { :id => /\d+/ }
-  
-  post "/user" => "user#create"
+  #User Controller
   get "/user" => "user#show" # use token for auth and user retrieval
 
+  post "/user" => "user#create"
   
+  #Accounts Controller
   get "/accounts" => "accounts#list"
   get "/accounts/:id" => "accounts#show"
 
   post "/accounts" => "accounts#create" # post will contain the system to integrate with e.g type: "pt"
 
   
+  #Projects Controller
   get "/projects" => "projects#list"
   get "/projects/:id" => "projects#show", :constraints => { :id => /\d+/ }
 
   
+  #Stories Controller
   get "/stories/:id" => "stories#show", :constraints => { :id => /\d+/ }
   
 

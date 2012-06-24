@@ -15,9 +15,7 @@ describe AccountsController do
   end
 
   it "can create an account linked to pivotal tracker" do
-
-
-
+    pending "add some examples to (or delete) #{__FILE__}"
   end
 
   it "can show the information for a specific account" do
