@@ -26,13 +26,15 @@ describe ApplicationController do
     end
   end
 
-  it "should return the currently authenticated user" do
-    user = User.new({:name => "matt"})
-    user.save!
+  describe "user_from_auth_token" do
+    it "should return the currently authenticated user" do
+      user = User.new({:name => "matt"})
+      user.save!
 
-    controller = ApplicationController.new
-    controller.params = {:auth_token => user.authentication_token}
-    result = controller.user_from_auth_token
-    result.should eql user
+      controller = ApplicationController.new
+      controller.params = {:auth_token => user.authentication_token}
+      result = controller.user_from_auth_token
+      result.should eql user
+    end
   end
 end

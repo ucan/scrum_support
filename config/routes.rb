@@ -3,7 +3,7 @@ ScrumSupport::Application.routes.draw do
   devise_for :users, :skip => :sessions
 
 
-  root :to => "root#index"  #testing purposes...needed for devise?
+  root :to => "root#index"  
 
   #User Controller
   get "/user" => "user#show" # use token for auth and user retrieval

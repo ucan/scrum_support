@@ -48,5 +48,16 @@ describe AccountsController do
     result["error"].should eql I18n.t('request.forbidden')
 
   end
+  
+  describe "create" do
+    it "provides 400 error for invalid request" do
+      user = User.new({name: "fred"})
+      user.save!
+      post :create, {:auth_token => user.authentication_token}
+      result = ActiveSupport::JSON.decode(response.body)
+      response.response_code.should eql 400
+      result["error"].should eql I18n.t('request.bad_request')
+    end
+  end
 
 end

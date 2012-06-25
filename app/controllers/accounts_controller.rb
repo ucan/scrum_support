@@ -13,7 +13,7 @@ class AccountsController < ApplicationController
   def show
     begin
       user = user_from_auth_token
-      account = user.accounts.find(params[:id])
+      account = user.accounts.find(params[:id]) #required as a part of the route
 
       render :json => account.projects
 
@@ -32,7 +32,8 @@ class AccountsController < ApplicationController
       user.accounts << ptAccount
       user.save
     else
-      # invalid params
+      # invalid type specified
+      render :json => {:error => I18n.t('request.bad_request')}, :status => :bad_request
     end
   end
 end
