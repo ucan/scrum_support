@@ -5,8 +5,11 @@ class UserController < ApplicationController
 	# Create a new user
 	def create
 		user = User.new(name: params[:name])
-		user.save!
-		render :json => user
+		if user.save
+			render :json => user
+		else
+			render :json => {:error => I18n.t('request.bad_request')}, :status => :bad_request
+		end
 	end
 
 	# Return the authenticated user
