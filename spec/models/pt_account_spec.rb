@@ -1,5 +1,5 @@
 require 'spec_helper'
 
 describe PtAccount do
-  pending "add some examples to (or delete) #{__FILE__}"
+  #manually tested
 end

@@ -49,7 +49,40 @@ describe AccountsController do
       
       result = ActiveSupport::JSON.decode(response.body)
       response.response_code.should eql 400
-      result["error"].should eql I18n.t('request.bad_request')
+      result["error"].should eql "#{I18n.t('request.bad_request')}: Invalid account type."
+    end
+
+    it "provides 400 error for pivotal tracker account type without email" do
+      user = FactoryGirl.create :user      
+      post :create, {:auth_token => user.authentication_token, :type => "pivotal_tracker", :password => "holycrap"}
+      result = ActiveSupport::JSON.decode(response.body)
+      response.response_code.should eql 400
+      result["error"].should eql "#{I18n.t('request.bad_request')}: Email and password required."
+    end
+
+    it "provides 400 error for pivotal tracker account type without password" do
+      user = FactoryGirl.create :user      
+      post :create, {:auth_token => user.authentication_token, :type => "pivotal_tracker", :email => "yabababab@sdghkld.com"}
+      result = ActiveSupport::JSON.decode(response.body)
+      response.response_code.should eql 400
+      result["error"].should eql "#{I18n.t('request.bad_request')}: Email and password required."
+    end
+
+    it "provides 401 error for incorrect email password combo" do
+      user = FactoryGirl.create :user      
+      post :create, {:auth_token => user.authentication_token, :type => "pivotal_tracker", 
+        :email => "lordtestymctesticles@gmail.com", :password => "wrong password"}
+      result = ActiveSupport::JSON.decode(response.body)
+      response.response_code.should eql 401
+    end
+
+    it "returns 201 code and a " do
+      user = FactoryGirl.create :user      
+      post :create, {:auth_token => user.authentication_token, :type => "pivotal_tracker", 
+        :email => "lordtestymctesticles@gmail.com", :password => "testicles"}
+      result = ActiveSupport::JSON.decode(response.body)
+      response.response_code.should eql 201
+      response.location.should include "/accounts/"
     end
   end
 

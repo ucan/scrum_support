@@ -9,6 +9,10 @@ FactoryGirl.define do
     user
   end
 
+  # factory :ptAccount, parent: :account do
+    
+  # end
+
   factory :project_mapping, :class => ProjectMapping do
     sequence :linked_id do |n|
       n
