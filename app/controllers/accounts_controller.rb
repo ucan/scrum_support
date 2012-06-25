@@ -13,12 +13,10 @@ class AccountsController < ApplicationController
   def show
     begin
       user = user_from_auth_token
-      account = user.accounts.find(params[:id])
-      if account.nil?
-        render :json => {:error => I18n.t('request.bad_request')}, :status => :bad_request
-      else
-        render :json => account.projects
-      end
+      account = user.accounts.find(params[:id]) #required as a part of the route
+
+      render :json => account.projects
+
     rescue ActiveRecord::RecordNotFound
       render :json => {:error => I18n.t('request.forbidden') }, :status => :forbidden
     end
@@ -34,7 +32,8 @@ class AccountsController < ApplicationController
       user.accounts << ptAccount
       user.save
     else
-      render :json => {:error => I18n.t('request.bad_request') }, :status => :bad_request
+      # invalid type specified
+      render :json => {:error => I18n.t('request.bad_request')}, :status => :bad_request
     end
   end
 end

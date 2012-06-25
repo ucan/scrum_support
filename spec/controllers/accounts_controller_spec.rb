@@ -2,10 +2,9 @@ require 'spec_helper'
 
 describe AccountsController do
   it "should be able to list account ids for a user" do
-    user = User.new(name: "Testy Kills")
-    user.accounts << Account.new()
-    user.accounts << Account.new()
-    user.save!
+    user = FactoryGirl.build(:user)
+    FactoryGirl.create :account, :user => user
+    FactoryGirl.create :account, :user => user
 
     get :list, { :auth_token => user.authentication_token }
 
@@ -19,11 +18,9 @@ describe AccountsController do
   end
 
   it "can show the information for a specific account" do
-    user = User.new(name: "Testy Kills")
-    account = Account.new()
-    user.accounts << account
-    user.save!
-
+    account = FactoryGirl.create(:account)
+    user = account.user
+    
     get :show, {:id => account.id, :auth_token => user.authentication_token }
 
     expected = account.projects.to_json
@@ -32,13 +29,8 @@ describe AccountsController do
   end
 
   it "does not allow access to other users accounts" do
-  	user1 = User.new(name: "Testy Kills")
-    account1 = Account.new()
-    user1.accounts << account1
-    user1.save!
-
-    user2 = User.new(name: "Testy Killer")
-    user2.save!
+    account1 = FactoryGirl.create :account
+    user2 = FactoryGirl.create :user
 
     get :show, {:id => account1.id, :auth_token => user2.authentication_token }
 
@@ -47,6 +39,18 @@ describe AccountsController do
     result["error"].should_not eql nil
     result["error"].should eql I18n.t('request.forbidden')
 
+  end
+  
+  describe "create" do
+    it "provides 400 error for invalid request" do
+      user = FactoryGirl.create :user 
+      
+      post :create, {:auth_token => user.authentication_token}
+      
+      result = ActiveSupport::JSON.decode(response.body)
+      response.response_code.should eql 400
+      result["error"].should eql I18n.t('request.bad_request')
+    end
   end
 
 end
