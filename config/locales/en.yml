@@ -3,5 +3,6 @@
 
 en:
   request:
+    bad_request: "Invalid request syntax" #400 :bad_request
     unauthorized: "User is not authenticated" #401 :unauthorized
     forbidden: "Cannot access the resource requested, the user does not have access to it." #403 :forbidden

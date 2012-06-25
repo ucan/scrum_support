@@ -4,7 +4,7 @@ class ApplicationController < ActionController::API
 
   	def authenticate
 		if params[:auth_token].nil? || User.find_by_authentication_token(params[:auth_token]).nil?
-			render :json => {:error => I18n.t('request.unauthorized') }, :status => :unauthorized 
+			render :json => {:error => I18n.t('request.unauthorized') }, :status => :unauthorized
 		end
 	end
 
