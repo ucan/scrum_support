@@ -69,7 +69,7 @@ end
 # Any code that is left outside the two blocks will be run during preforking
 # *and* during each_run -- that's probably not what you want.
 #
-# These instructions should self-destruct in 10 seconds.  If they don't, feel
+# se instructions should self-destruct in 10 seconds.  If they don't, feel
 # free to delete them.
 
 

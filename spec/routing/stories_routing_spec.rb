@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe StoriesController do
+  it_behaves_like "an_api_controller", "/stories", [:get]
+
   it "routes to /show/n" do
   	u = User.new(name:"Testy")
   	u.save!
