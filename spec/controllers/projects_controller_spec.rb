@@ -28,6 +28,14 @@ describe ProjectsController do
 		result.should =~ ActiveSupport::JSON.decode(project.stories.to_json)
 	end
 
+  it "should provide an error if the project id is not valid" do
+    user = FactoryGirl.create :user
+    get :show, { :id => 999999, :auth_token => user.authentication_token }
+    result = ActiveSupport::JSON.decode response.body
+    response.status.should eql 404
+    result["error"].should eql I18n.t 'request.not_found'
+  end
+
 	it "should only allow access to the authenticated users stories" do
 		story = FactoryGirl.create :story
     project = story.project

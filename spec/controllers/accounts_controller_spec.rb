@@ -7,7 +7,7 @@ describe AccountsController do
     FactoryGirl.create :account, :user => user
 
     get :list, { :auth_token => user.authentication_token }
-
+ 
     expected = user.accounts.to_json
     result = ActiveSupport::JSON.decode(response.body)
     ActiveSupport::JSON.decode(expected).should =~ result
