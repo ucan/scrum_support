@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe ProjectMapping do
   before(:each) do
-    user = User.new(name:"Testy")
+    user = FactoryGirl.create(:user)
     account = Account.new
     user.accounts << account
     project = Project.new(title: "Test Project")

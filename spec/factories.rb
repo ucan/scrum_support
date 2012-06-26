@@ -1,17 +1,14 @@
 FactoryGirl.define do
   factory :user do
-    sequence :name do |n|
-      "fred#{n}"
+    sequence :email do |n|
+      "fred#{n}@testing.com"
     end
+    password "password"
   end
 
   factory :account do
     user
   end
-
-  # factory :ptAccount, parent: :account do
-    
-  # end
 
   factory :project_mapping, :class => ProjectMapping do
     sequence :linked_id do |n|

@@ -10,7 +10,7 @@ describe AccountsController do
   end
 
   it "routes to /show/n" do
-  	u = User.new(name:"Testy")
+  	u = FactoryGirl.create(:user)
   	u.save!
     get("/accounts/1?auth_token=#{u.authentication_token}").should route_to(:controller => "accounts", :action => "show", :id => "1")
   end

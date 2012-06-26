@@ -2,12 +2,10 @@ ScrumSupport::Application.routes.draw do
 
   devise_for :users, :skip => :sessions
 
-
   root :to => "root#index"  
 
   #User Controller
-  get "/user" => "user#show" # use token for auth and user retrieval
-
+  get "/user" => "user#show" # use email & password for auth_token retrieval
   post "/user" => "user#create"
   
   #Accounts Controller

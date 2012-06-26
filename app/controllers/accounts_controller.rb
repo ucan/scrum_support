@@ -4,7 +4,7 @@ class AccountsController < ApplicationController
 
   # Returns a list of account ids
   def list
-    user = user_from_auth_token
+    user = current_user
     accounts = user.accounts
     render :json => accounts
   end
@@ -12,7 +12,7 @@ class AccountsController < ApplicationController
   # Returns a list of projects for the user
   def show
     begin
-      user = user_from_auth_token
+      user = current_user
       account = user.accounts.find(params[:id]) #required as a part of the route
 
       render :json => account.projects
@@ -45,7 +45,7 @@ class AccountsController < ApplicationController
   def create_pivotal_tracker
     begin
       ptAccount = PtAccount.new(params[:email], params[:password])
-      user = user_from_auth_token
+      user = current_user
       user.accounts << ptAccount
       if (ptAccount.save!)
         render :json => ptAccount, :status => :created, :location => url_for(controller: :accounts, action: :show, id: ptAccount.id)

@@ -6,6 +6,7 @@ describe AccountsController do
     FactoryGirl.create :account, :user => user
     FactoryGirl.create :account, :user => user
 
+    @request.env["devise.mapping"] = Devise.mappings[:user]
     get :list, { :auth_token => user.authentication_token }
  
     expected = user.accounts.to_json

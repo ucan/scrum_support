@@ -1,20 +1,20 @@
 class User < ActiveRecord::Base
-  # Include default devise modules. Others available are:
-  # :token_authenticatable, :confirmable,
-  # :lockable, :timeoutable and :omniauthable
+  has_secure_password
   devise :token_authenticatable
 
-  # :database_authenticatable, :registerable,
-  #        :recoverable, :rememberable, :trackable, :validatable
+  attr_accessible :email, :password, :authentication_token
 
-  # Setup accessible (or protected) attributes for your model
-  attr_accessible :authentication_token
-  attr_accessible :name #Just added for testing purposes. Probably needs a token or something?
   has_many :accounts, :uniq => true, :inverse_of => :user
 
   before_save :ensure_authentication_token
 
+  validates_confirmation_of :password
+  validates_presence_of :password, :on => :create
+  validates_presence_of :email
+  validates_uniqueness_of :email
+
+
   def as_json(options = {})
-    super(:only => [:name, :authentication_token])
+    super(:only => [:email, :authentication_token])
   end
 end

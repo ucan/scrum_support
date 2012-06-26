@@ -6,8 +6,7 @@ describe ProjectsController do
   end
 
   it "routes to /show/n" do
-  	u = User.new(name:"Testy")
-  	u.save!
+  	u = FactoryGirl.create(:user)
     get("/projects/1?auth_token=#{u.authentication_token}").should route_to(:controller => "projects", :action => "show", :id => "1")
   end
 end

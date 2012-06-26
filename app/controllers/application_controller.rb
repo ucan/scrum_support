@@ -1,5 +1,7 @@
 class ApplicationController < ActionController::API
   #protect_from_forgery
+  #force_ssl
+  
   include ActionController::MimeResponds
 
   	def authenticate

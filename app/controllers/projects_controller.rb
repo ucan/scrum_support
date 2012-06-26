@@ -4,7 +4,7 @@ class ProjectsController < ApplicationController
 
   # Return a list of all project ids (from all accounts)
   def list
-    user = user_from_auth_token
+    user = current_user
     projects = []
     user.accounts.each { |account|
       account.projects.each { |project| 
@@ -16,7 +16,7 @@ class ProjectsController < ApplicationController
 
   # Return a list of stories for a project
   def show
-    user = user_from_auth_token
+    user = current_user
     project = Project.find_by_id(params[:id])
     if !project.nil?
       if project.account.user == user

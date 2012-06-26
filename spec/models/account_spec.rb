@@ -5,7 +5,7 @@ require 'user'
 describe Account do
   before(:each) do
 	@account = Account.new
-	user = User.new(name: "Testy McTested")
+	user = FactoryGirl.create(:user)
 	user.accounts << @account
   end
 

@@ -28,14 +28,15 @@ describe ApplicationController do
     end
   end
 
-  describe "user_from_auth_token" do
-    it "should return the currently authenticated user" do
-      user = FactoryGirl.create :user 
+  # describe "user_from_auth_token" do
+  #   it "should return the currently authenticated user" do
+  #     user = FactoryGirl.create :user 
 
-      controller = ApplicationController.new
-      controller.params = {:auth_token => user.authentication_token}
-      result = controller.user_from_auth_token
-      result.should eql user
-    end
-  end
+  #     controller = ApplicationController.new
+  #     controller.params = {:auth_token => user.authentication_token}
+  #     result = controller.user_from_auth_token
+  #     result.should eql user
+  #   end
+  # end
+
 end

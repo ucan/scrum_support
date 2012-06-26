@@ -6,7 +6,7 @@ describe UserController do
   end
 
   it "routes to #show" do
-  	u = User.new(name:"Testy")
+  	u = FactoryGirl.create(:user)
   	u.save!
     get("/user?auth_token=#{u.authentication_token}").should route_to("user#show")
   end
