@@ -5,7 +5,7 @@ class UserController < ApplicationController
     if User.where(email: params[:email]).first
       render json: {error: "Email already registered"}, status: :conflict
       return
-    elsif params[:password] && params[:password_confirmation] && (params[:password] != params[:password_confirmation])
+    elsif params[:password].nil? || params[:password_confirmation].nil? || (params[:password] != params[:password_confirmation])
       	render json: {error: "#{I18n.t('request.bad_request')}: Passwords do not match."}, status: :bad_request
     else
       user = User.new(email: params[:email], password: params[:password], password_confirmation: params[:password_confirmation])
