@@ -10,7 +10,7 @@ class UserController < ApplicationController
     else
       user = User.new(email: params[:email], password: params[:password], password_confirmation: params[:password_confirmation])
       if user.save
-        render json: {user: user, link: {accounts: "/accounts", projects: "/projects"} }
+        render json: {user: user, links: {accounts: "/accounts", projects: "/projects"} }
         return
       else
         render json: {error: I18n.t('request.bad_request')}, status: :bad_request
@@ -26,7 +26,7 @@ class UserController < ApplicationController
     else
       user = User.where(email: params[:email]).first
       if user && user.authenticate(params[:password])
-        render json: {user: user, link: {accounts: "/accounts", projects: "/projects"} }
+        render json: {user: user, links: {accounts: "/accounts", projects: "/projects"} }
         return
       else
         render json: {error: I18n.t('request.unauthorized') }, status: :unauthorized
