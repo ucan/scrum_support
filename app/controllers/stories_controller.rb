@@ -3,7 +3,7 @@ class StoriesController < ApplicationController
 	before_filter :authenticate
 
 	def show
-		user = current_user
+		user = user_from_auth_token
 		story = Story.find_by_id(params[:id])
     if !story.nil?
       if story.project.account.user == user

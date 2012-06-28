@@ -1,19 +1,19 @@
 class UserController < ApplicationController
 
-  #before_filter :authenticate, :only => :show
-
   # Create a new user
   def create
-    if User.find_by_email(params[:email])
-      render :json => {:error => "Email already registered"}, :status => :conflict
+    if User.where(email: params[:email]).first
+      render json: {error: "Email already registered"}, status: :conflict
       return
+    elsif params[:password] && params[:password_confirmation] && (params[:password] != params[:password_confirmation])
+      	render json: {error: "#{I18n.t('request.bad_request')}: Passwords do not match."}, status: :bad_request
     else
-      user = User.new(email: params[:email], password: params[:password])
+      user = User.new(email: params[:email], password: params[:password], password_confirmation: params[:password_confirmation])
       if user.save
-        render :json => user
+        render json: user
         return
       else
-        render :json => {:error => I18n.t('request.bad_request')}, :status => :bad_request
+        render json: {error: I18n.t('request.bad_request')}, status: :bad_request
         return
       end
     end
@@ -21,13 +21,17 @@ class UserController < ApplicationController
 
   # Return the auth_token for a user if supplied with correct email & password
   def show
-    user = User.find_by_email(params[:email])
-    if user && user.authenticate(params[:password])
-      render :json => user
-      return
+    if params[:email].nil? || params[:password].nil?
+      render json: {error: "#{I18n.t('request.bad_request')}: email and password required."}, status: :bad_request
     else
-      render :json => {:error => I18n.t('request.unauthorized') }, :status => :unauthorized
-      return
+      user = User.where(email: params[:email]).first
+      if user && user.authenticate(params[:password])
+        render json: user
+        return
+      else
+        render json: {error: I18n.t('request.unauthorized') }, status: :unauthorized
+        return
+      end
     end
   end
 end

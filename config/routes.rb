@@ -1,6 +1,6 @@
 ScrumSupport::Application.routes.draw do
 
-  devise_for :users, :skip => :sessions
+  #devise_for :users, :skip => :sessions
 
   root :to => "root#index", via: [:get] 
 
@@ -22,6 +22,4 @@ ScrumSupport::Application.routes.draw do
   
   #Stories Controller
   get "/stories/:id" => "stories#show", :constraints => { :id => /\d+/ }
-  
-
 end

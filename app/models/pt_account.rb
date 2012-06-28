@@ -1,9 +1,14 @@
 class PtAccount < Account
   
-  def initialize(email, password)
+  def initialize(api_token)
     super()
-  	PivotalTracker::Client.token(email, password)
+  	PivotalTracker::Client.token = api_token
     fetch_projects
+  end
+
+  # Retrieve a users api_token from PT using email and password
+  def self.get_token(email, password)
+    PivotalTracker::Client.token(email, password)
   end
 
   def fetch_projects

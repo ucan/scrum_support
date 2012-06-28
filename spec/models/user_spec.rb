@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe User do
+
   before(:each) do
 	@user = FactoryGirl.create(:user)
   end
@@ -23,6 +24,7 @@ describe User do
   end
 
   subject { @user }
+  it { should respond_to(:authentication_token) }
   it { should respond_to(:accounts) }
   it { should respond_to(:email) }
   it { should be_valid }

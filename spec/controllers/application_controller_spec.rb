@@ -17,26 +17,23 @@ describe ApplicationController do
       Rails.application.reload_routes! #Reset routes to prevent mucking up routes for other tests
     end
 
-    it "should return ? for authenticated users" do
+    it "should return nil for authenticated users" do
       user = FactoryGirl.create :user
-
       controller = ApplicationController.new
       controller.params = {:auth_token => user.authentication_token}
       result = controller.authenticate
-
       result.should eql nil
     end
   end
 
-  # describe "user_from_auth_token" do
-  #   it "should return the currently authenticated user" do
-  #     user = FactoryGirl.create :user 
-
-  #     controller = ApplicationController.new
-  #     controller.params = {:auth_token => user.authentication_token}
-  #     result = controller.user_from_auth_token
-  #     result.should eql user
-  #   end
-  # end
+  describe "user_from_auth_token" do
+    it "should return the currently authenticated user" do
+      user = FactoryGirl.create :user
+      controller = ApplicationController.new
+      controller.params = {:auth_token => user.authentication_token}
+      result = controller.user_from_auth_token
+      result.should eql user
+    end
+  end
 
 end

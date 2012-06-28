@@ -4,7 +4,7 @@ class AccountsController < ApplicationController
 
   # Returns a list of account ids
   def list
-    user = current_user
+    user = user_from_auth_token
     accounts = user.accounts
     render :json => accounts
   end
@@ -12,7 +12,7 @@ class AccountsController < ApplicationController
   # Returns a list of projects for the user
   def show
     begin
-      user = current_user
+      user = user_from_auth_token
       account = user.accounts.find(params[:id]) #required as a part of the route
 
       render :json => account.projects
@@ -26,8 +26,8 @@ class AccountsController < ApplicationController
     errors = ""
     # check if we are creating a pt account
     if params[:type] == "pivotal_tracker"
-      if params[:email].nil? || params[:password].nil?
-        errors << "Email and password required."
+      if params[:api_token].nil? && (params[:email].nil? || params[:password].nil?)
+        errors << "Either an api_token or email and password are required."
       else
         create_pivotal_tracker
         return
@@ -44,11 +44,17 @@ class AccountsController < ApplicationController
 
   def create_pivotal_tracker
     begin
-      ptAccount = PtAccount.new(params[:email], params[:password])
-      user = current_user
+      api_token = if params[:api_token]
+        params[:api_token]
+      else
+        PtAccount.get_token(params[:email], params[:password])
+      end
+      ptAccount = PtAccount.new(api_token)
+      user = user_from_auth_token
       user.accounts << ptAccount
-      if (ptAccount.save!)
-        render :json => ptAccount, :status => :created, :location => url_for(controller: :accounts, action: :show, id: ptAccount.id)
+      if (ptAccount.save)
+        render :json => ptAccount, :status => :created, 
+                :location => url_for(controller: :accounts, action: :show, id: ptAccount.id)
         return
       else
         render :json => {:error => "#{I18n.t('request.bad_request')}: #{ptAccount.errors}"}, :status => :bad_request
