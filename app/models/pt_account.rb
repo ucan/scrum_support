@@ -18,9 +18,18 @@ class PtAccount < Account
       mapping = ProjectMapping.new(linked_id: ptProject.id, project: ourProject)
       project_mappings << mapping
       ourProject.save!
-      fetch_stories(mapping)
+      # fetch_stories(mapping)
+      fetch_members(mapping)
   	}
   	projects
+  end
+
+  def fetch_members(project_mapping)
+    PivotalTracker::Project.find(project_mapping.linked_id).memberships.all.each do |ptMembership|
+      puts ptMembership.inspect
+      # ourMembership = Membership.new(person: person, project: project_mapping.project)
+      # ourMembership.save!
+    end
   end
 
   def fetch_stories(project_mapping)

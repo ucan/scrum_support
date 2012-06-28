@@ -2,7 +2,7 @@ class ProjectsController < ApplicationController
 
   before_filter :authenticate
 
-  # Return a list of all project ids (from all accounts)
+  # Return a list of all projects (id, title) from all accounts
   def list
     user = user_from_auth_token
     projects = []
@@ -11,21 +11,20 @@ class ProjectsController < ApplicationController
         projects << project
       }
     }
-    render :json => projects
-  end
+    render json: projects
+  end 
 
-  # Return a list of stories for a project
   def show
     user = user_from_auth_token
     project = Project.find_by_id(params[:id])
     if !project.nil?
       if project.account.user == user
-        render :json => project.stories
+        render json: {people: project.people, stories: project.stories}
       else
-        render :json => {:error => I18n.t('request.forbidden') }, :status => :forbidden
+        render json: {error: I18n.t('request.forbidden') }, status: :forbidden
       end
     else
-      render :json => {:error => I18n.t('request.not_found')}, :status => :not_found
+      render json: {error: I18n.t('request.not_found') }, status: :not_found
     end
   end
 end

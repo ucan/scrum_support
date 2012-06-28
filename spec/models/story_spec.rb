@@ -6,7 +6,7 @@ require 'task'
 describe Story do
 
 	before(:each) do
-	    @story = Story.new(title: "Test Story", project: Project.new(title: "Test Project"))
+	    @story = FactoryGirl.create(:story)
 	end
  
     it "should not be valid without a title" do
@@ -24,7 +24,7 @@ describe Story do
     it "should have tasks" do
         @story.tasks.length.should eql 0
         @story.save()
-        @task = Task.new(description: "Test Task One")
+        @task = FactoryGirl.create(:task)
         @task.save()
         # TODO: Fix - this line shouldn't be needed.
         @story.tasks << @task

@@ -5,14 +5,10 @@ require 'membership'
 
 describe Person do
 	before(:each) do
-		@person = Person.new
-	    @person.firstName = "Dave"
-	    @person.lastName = "White"
-	    @person.email = "White"
-	    @person.userName = "dkw38"
+		@person = FactoryGirl.create(:person)
 
- 		@project1 = Project.new(title: "Test Project 1")
-	    @project2 = Project.new(title: "Test Project 2")
+ 		@project1 = FactoryGirl.create(:project)
+	    @project2 = FactoryGirl.create(:project)
 		@membership1 = Membership.new(person: @person, project: @project1)  
 	    @membership2 = Membership.new(person: @person, project: @project2) 
 	end
@@ -21,23 +17,11 @@ describe Person do
 	    @person.should be_valid
 	end
 
-	it "should have a first name" do
-		@person.firstName = ""
-   		@person.should have(1).error_on(:firstName)
+	it "should have a name" do
+		@person.name = ""
+   		@person.should have(1).error_on(:name)
 	 	@person.should_not be_valid
-	end
-
-	it "should have a last name" do
-	    @person.lastName = ""
-   		@person.should have(1).error_on(:lastName)
-	 	@person.should_not be_valid
-	end
-
-	it "should have a user name" do
-	 	@person.userName = ""
-   		@person.should have(1).error_on(:userName)
-	 	@person.should_not be_valid
-	end
+	end	
 
 	it "should have an email" do
 	 	@person.email = ""
@@ -54,7 +38,8 @@ describe Person do
 	end
 
 	it "should not be able to add a duplicate project" do
-		@person.projects << @project1 << @project1
+		@person.projects << @project1
+		lambda { @person.projects << @project1 }.should raise_error(ActiveRecord::RecordInvalid)
 		@person.projects.length.should == 1
 		@person.projects.should == [@project1]
 	end
@@ -79,10 +64,8 @@ describe Person do
 		@person.memberships.should == [@membership1]
 	end
 
-	subject { @person }
-    it { should respond_to(:firstName) }
-    it { should respond_to(:lastName) }
-    it { should respond_to(:userName) }
+	subject { @person }    
+    it { should respond_to(:name) }
     it { should respond_to(:email) }
     it { should respond_to(:projects) }
     it { should respond_to(:memberships) }

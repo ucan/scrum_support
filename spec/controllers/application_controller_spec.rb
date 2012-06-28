@@ -20,7 +20,7 @@ describe ApplicationController do
     it "should return nil for authenticated users" do
       user = FactoryGirl.create :user
       controller = ApplicationController.new
-      controller.params = {:auth_token => user.authentication_token}
+      controller.params = {:auth_token => user.auth_token}
       result = controller.authenticate
       result.should eql nil
     end
@@ -30,7 +30,7 @@ describe ApplicationController do
     it "should return the currently authenticated user" do
       user = FactoryGirl.create :user
       controller = ApplicationController.new
-      controller.params = {:auth_token => user.authentication_token}
+      controller.params = {:auth_token => user.auth_token}
       result = controller.user_from_auth_token
       result.should eql user
     end

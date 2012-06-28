@@ -1,11 +1,11 @@
 class User < ActiveRecord::Base
   has_secure_password
 
-  attr_accessible :email, :password, :password_confirmation, :authentication_token
+  attr_accessible :email, :password, :password_confirmation, :auth_token
 
   has_many :accounts, :uniq => true, :inverse_of => :user
 
-  before_save :ensure_authentication_token
+  before_save :ensure_auth_token
 
   validates_confirmation_of :password
   validates_presence_of :password, :on => :create
@@ -14,12 +14,12 @@ class User < ActiveRecord::Base
 
 
   def as_json(options = {})
-    super(:only => [:email, :authentication_token])
+    super(:only => [:email, :auth_token])
   end
 
-  def ensure_authentication_token
-    if !self.authentication_token
-      self.authentication_token = Digest::SHA1.hexdigest(rand(Rails.application.config.RAND_SEED).to_s)
+  def ensure_auth_token
+    if !self.auth_token
+      self.auth_token = Digest::SHA1.hexdigest(rand(Rails.application.config.RAND_SEED).to_s)
     end
   end
 end

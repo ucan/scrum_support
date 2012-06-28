@@ -29,10 +29,8 @@ ActiveRecord::Schema.define(:version => 20120621050054) do
   add_index "memberships", ["project_id", "person_id"], :name => "index_memberships_on_project_id_and_person_id", :unique => true
 
   create_table "people", :force => true do |t|
-    t.string   "firstName"
-    t.string   "lastName"
+    t.string   "name"
     t.string   "email"
-    t.string   "userName"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -77,10 +75,10 @@ ActiveRecord::Schema.define(:version => 20120621050054) do
 
   create_table "users", :force => true do |t|
     t.string   "email"
-    t.string   "authentication_token"
+    t.string   "auth_token"
     t.string   "password_digest"
-    t.datetime "created_at",           :null => false
-    t.datetime "updated_at",           :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

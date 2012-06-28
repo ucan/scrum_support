@@ -18,8 +18,8 @@ ScrumSupport::Application.routes.draw do
   #Projects Controller
   get "/projects" => "projects#list"
   get "/projects/:id" => "projects#show", :constraints => { :id => /\d+/ }
-
   
   #Stories Controller
   get "/stories/:id" => "stories#show", :constraints => { :id => /\d+/ }
+  
 end

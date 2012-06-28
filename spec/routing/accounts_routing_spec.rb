@@ -18,7 +18,7 @@ describe AccountsController do
   
     it "routes to /show/n" do
       u = FactoryGirl.create(:user) 
-      get("/accounts/1?auth_token=#{u.authentication_token}").should route_to(:controller => "accounts", :action => "show", :id => "1")
+      get("/accounts/1?auth_token=#{u.auth_token}").should route_to(controller: "accounts", action: "show", id: "1")
     end
   end
 end

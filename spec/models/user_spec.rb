@@ -24,7 +24,7 @@ describe User do
   end
 
   subject { @user }
-  it { should respond_to(:authentication_token) }
+  it { should respond_to(:auth_token) }
   it { should respond_to(:accounts) }
   it { should respond_to(:email) }
   it { should be_valid }

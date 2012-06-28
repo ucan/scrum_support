@@ -5,10 +5,9 @@ require 'project'
 describe Task do	
 
 	before(:each) do
-	    @project = Project.new(title: "Test Project")         
-        @story = Story.new(title: "Test story", project: @project)
-
-	    @task1 = Task.new(description: "Test Task One", story: @story)
+	    @project = FactoryGirl.create(:project)         
+        @story = FactoryGirl.create(:story, project: @project)
+	    @task1 = FactoryGirl.build(:task, story: @story)
 	end
 
     it "should not be valid without a description" do
@@ -23,7 +22,7 @@ describe Task do
     	@task1.should_not be_valid
     end
 
-    it "have a valid default status" do
+    it "should have a valid default status" do
         @task1.status.should eql nil
         @task1.valid?
         @task1.should be_valid

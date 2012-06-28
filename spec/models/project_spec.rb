@@ -6,13 +6,11 @@ require 'membership'
 describe Project do
 
     before(:all) do
-        @person = Person.new(firstName: "Dave", lastName: "White", email: "dkw38@uclive.ac.nz", userName: "dkw38")
-        @person.save()
+        @person = FactoryGirl.create(:person)
     end
 
 	before(:each) do
-	    @project = Project.new(title: "Test Project") 
-        
+	    @project = FactoryGirl.create(:project)
         @story1 = Story.new(title: "Test story 1", project: @project)
         @story2 = Story.new(title: "Test story 2", project: @project)
 	end

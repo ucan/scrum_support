@@ -10,9 +10,9 @@ describe UserController do
       post :create, { :email => email, :password => password, :password_confirmation => password }
       response.header['Content-Type'].should include 'application/json'
       response.response_code.should eql 200
-      result = User.new.from_json(response.body)
-      result.email.should eql email
-      result.authentication_token.nil?.should eql false
+      result = ActiveSupport::JSON.decode(response.body) #User.new.from_json(response.body)
+      result["user"]["email"].should eql email
+      result["user"]["auth_token"].nil?.should eql false
     end
 
     it "should return 400:bad request when creating a new user with non-matching passwords" do
@@ -43,7 +43,7 @@ describe UserController do
       response.response_code.should eql 200
       expected = user.to_json
       result = ActiveSupport::JSON.decode(response.body)
-      result.should eql ActiveSupport::JSON.decode(expected)
+      result["user"].should eql ActiveSupport::JSON.decode(expected)
     end
 
     it "should return 400 if neither email nor password is supplied" do

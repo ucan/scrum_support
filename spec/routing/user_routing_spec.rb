@@ -9,7 +9,7 @@ describe UserController do
 
   it "routes to #show" do
     u = FactoryGirl.create(:user)
-    get("/user?auth_token=#{u.authentication_token}").should route_to("user#show")
+    get("/user?auth_token=#{u.auth_token}").should route_to("user#show")
   end
 end
 

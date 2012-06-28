@@ -10,6 +10,15 @@ FactoryGirl.define do
     user
   end
 
+  factory :person do
+    sequence :email do |n|
+      "fred#{n}@testing.com"
+    end
+    sequence :name do |n|
+      "fred#{n}"
+    end
+  end
+
   factory :project_mapping, :class => ProjectMapping do
     sequence :linked_id do |n|
       n

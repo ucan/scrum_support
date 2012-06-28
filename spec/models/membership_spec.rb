@@ -3,10 +3,8 @@ require 'membership'
 
 describe Membership do
     before(:each) do
-  		@person = Person.new(firstName: "Dave", lastName: "White", email: "dkw38@uclive.ac.nz", userName: "dkw38")
-  		@person.save 
-  		@project = Project.new(title: "Test Project")
-  		@project.save
+  		@person = FactoryGirl.create(:person)
+  		@project = FactoryGirl.create(:project)
 	end
 
 	it "should not be valid without a person" do  
