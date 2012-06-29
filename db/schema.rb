@@ -11,10 +11,12 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120621050054) do
+ActiveRecord::Schema.define(:version => 20120629070559) do
 
   create_table "accounts", :force => true do |t|
     t.integer  "user_id"
+    t.string   "api_token"
+    t.string   "type"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -51,16 +53,27 @@ ActiveRecord::Schema.define(:version => 20120621050054) do
     t.datetime "updated_at", :null => false
   end
 
-  create_table "pt_accounts", :force => true do |t|
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
   create_table "stories", :force => true do |t|
     t.integer  "project_id"
     t.string   "title"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "story_mappings", :force => true do |t|
+    t.integer  "linked_id"
+    t.integer  "project_mapping_id"
+    t.integer  "story_id"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+  end
+
+  create_table "task_mappings", :force => true do |t|
+    t.integer  "linked_id"
+    t.integer  "story_mapping_id"
+    t.integer  "task_id"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
   end
 
   create_table "tasks", :force => true do |t|

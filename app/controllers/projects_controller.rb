@@ -7,24 +7,39 @@ class ProjectsController < ApplicationController
     user = user_from_auth_token
     projects = []
     user.accounts.each { |account|
-      account.projects.each { |project| 
+      account.fetch_projects
+      account.reload
+      account.projects.each { |project|
         projects << project
       }
     }
-    render json: projects
-  end 
+    render json: { projects: projects, links: {} }, status: :ok # TODO links
+  end
 
   def show
     user = user_from_auth_token
     project = Project.find_by_id(params[:id])
-    if !project.nil?
-      if project.account.user == user
-        render json: {people: project.people, stories: project.stories}
+    if project
+      projectMapping = ProjectMapping.where(project_id: project.id).first
+      if projectMapping && projectMapping.account.user == user
+        projectMapping.account.fetch_members(project)
+        projectMapping.account.fetch_stories(project)
+        project.reload
+        render json: { people: project.people, stories: project.stories, links: {} }, status: :ok # TODO links
       else
         render json: {error: I18n.t('request.forbidden') }, status: :forbidden
       end
     else
       render json: {error: I18n.t('request.not_found') }, status: :not_found
     end
+  end
+
+
+  protected
+
+  def sync
+    user_from_auth_token.accounts.each { |account|
+      account.sync
+    }
   end
 end

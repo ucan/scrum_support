@@ -9,7 +9,7 @@ describe UserController do
       password = "password"
       post :create, { :email => email, :password => password, :password_confirmation => password }
       response.header['Content-Type'].should include 'application/json'
-      response.response_code.should eql 200
+      response.response_code.should eql 201
       result = ActiveSupport::JSON.decode(response.body) #User.new.from_json(response.body)
       result["user"]["email"].should eql email
       result["user"]["auth_token"].nil?.should eql false

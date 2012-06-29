@@ -6,13 +6,16 @@ class StoriesController < ApplicationController
 		user = user_from_auth_token
 		story = Story.find_by_id(params[:id])
     if !story.nil?
-      if story.project.account.user == user
-        render :json => story.tasks
+      projectMapping = ProjectMapping.where(project_id: story.project.id).first
+      if projectMapping && projectMapping.account.user == user
+        projectMapping.account.fetch_tasks(story)
+        story.reload
+        render json: { tasks: story.tasks, links: {} }, status: :ok # TODO links
       else
-        render :json => {:error => I18n.t('request.forbidden') }, :status => :forbidden
+        render json: { error: I18n.t('request.forbidden') }, status: :forbidden
       end
     else
-      render :json => {:error => I18n.t('request.not_found')}, :status => :not_found
+      render json: { error: I18n.t('request.not_found')}, status: :not_found
     end
 	end
 end

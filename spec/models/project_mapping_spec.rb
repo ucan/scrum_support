@@ -2,11 +2,9 @@ require 'spec_helper'
 
 describe ProjectMapping do
   before(:each) do
-    user = FactoryGirl.create(:user)
-    account = Account.new
-    user.accounts << account
-    project = Project.new(title: "Test Project")
-    @projectMapping = ProjectMapping.new(linked_id: 12345, project: project)
+    account = FactoryGirl.create(:account)
+    project = FactoryGirl.create(:project)
+    @projectMapping = FactoryGirl.create(:project_mapping, project: project)
     account.project_mappings << @projectMapping
   end
 

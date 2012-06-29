@@ -6,19 +6,19 @@ class AccountsController < ApplicationController
   def list
     user = user_from_auth_token
     accounts = user.accounts
-    render :json => accounts
+    render json: { accounts: accounts, links: {} }, status: :ok # TODO links
   end
 
-  # Returns a list of projects for the user
+  # Returns a list of projects for one of the users accounts
   def show
     begin
       user = user_from_auth_token
       account = user.accounts.find(params[:id]) #required as a part of the route
 
-      render :json => account.projects
+      render json: {projects: account.projects, links: {} }, status: :ok # TODO links
 
     rescue ActiveRecord::RecordNotFound
-      render :json => {:error => I18n.t('request.forbidden') }, :status => :forbidden
+      render json: {error: I18n.t('request.forbidden') }, status: :forbidden
     end
   end
 
@@ -36,7 +36,7 @@ class AccountsController < ApplicationController
       errors << "Invalid account type."
     end
     # invalid type specified
-    render :json => {:error => "#{I18n.t('request.bad_request')}: #{errors}"}, :status => :bad_request
+    render json: { error: "#{I18n.t('request.bad_request')}: #{errors}"}, status: :bad_request
   end
 
 
@@ -49,18 +49,19 @@ class AccountsController < ApplicationController
       else
         PtAccount.get_token(params[:email], params[:password])
       end
-      ptAccount = PtAccount.new(api_token)
+      ptAccount = PtAccount.new(api_token: api_token)
       user = user_from_auth_token
       user.accounts << ptAccount
       if (ptAccount.save)
-        render :json => ptAccount, :status => :created, 
-                :location => url_for(controller: :accounts, action: :show, id: ptAccount.id)
+        # TODO do we need to add links to 'created', and 'error' responses?
+        render json: { account: ptAccount }, :status => :created,
+                      :location => url_for(controller: :accounts, action: :show, id: ptAccount.id)
         return
       else
-        render :json => {:error => "#{I18n.t('request.bad_request')}: #{ptAccount.errors}"}, :status => :bad_request
+        render json: { error: "#{I18n.t('request.bad_request')}: #{ptAccount.errors}"}, status: :bad_request
       end
     rescue RestClient::Unauthorized
-      render :json => {:error => "#{I18n.t('request.unauthorized')}: Incorrect email or password"}, :status => :unauthorized
+      render json: { error: "#{I18n.t('request.unauthorized')}: Incorrect email or password"}, status: :unauthorized
     end
   end
 

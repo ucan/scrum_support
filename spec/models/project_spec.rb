@@ -1,7 +1,4 @@
 require 'spec_helper'
-require 'project'
-require 'story'
-require 'membership'
 
 describe Project do
 
@@ -11,8 +8,8 @@ describe Project do
 
 	before(:each) do
 	    @project = FactoryGirl.create(:project)
-        @story1 = Story.new(title: "Test story 1", project: @project)
-        @story2 = Story.new(title: "Test story 2", project: @project)
+        @story1 = FactoryGirl.build(:story, project: @project)
+        @story2 = FactoryGirl.build(:story, project: @project)
 	end
 
     it "should not be valid without a title" do

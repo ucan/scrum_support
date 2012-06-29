@@ -24,13 +24,15 @@ FactoryGirl.define do
       n
     end
     account
+    project
   end
 
   factory :project do
     sequence :title do |n|
       "project#{n}"
     end
-    association :project_mapping, :strategy => :build
+    #project_mapping
+    #association :project_mapping, :strategy => :build
   end
 
   factory :story do

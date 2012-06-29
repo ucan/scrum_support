@@ -28,11 +28,12 @@ describe Membership do
 
 	it "should not allow more than membership relationship between one person and one project" do
 		membership1 = Membership.new(person: @person, project: @project)
-		membership1.save
+		membership1.save!
 		membership2 = Membership.new(person: @person, project: @project)
 		@person.should be_valid
 		@project.should be_valid
 		membership2.should_not be_valid
+		lambda { membership2.save! }.should raise_error(ActiveRecord::RecordInvalid)
 	end
 
 	subject { membership = Membership.new(project: @project, person: @person) } 

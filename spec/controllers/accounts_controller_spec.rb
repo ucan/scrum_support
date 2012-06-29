@@ -3,27 +3,23 @@ require 'spec_helper'
 describe AccountsController do
   it "should be able to list account ids for a user" do
     user = FactoryGirl.build(:user)
-    FactoryGirl.create :account, :user => user
-    get :list, { :auth_token => user.auth_token }
+    FactoryGirl.create(:account, user: user)
+    get :list, { auth_token: user.auth_token }
  
     expected = user.accounts.to_json
     result = ActiveSupport::JSON.decode(response.body)
-    result.should =~ ActiveSupport::JSON.decode(expected)
-  end
-
-  it "can create an account linked to pivotal tracker" do
-    pending "add some examples to (or delete) #{__FILE__}"
+    result["accounts"].should =~ ActiveSupport::JSON.decode(expected)
   end
 
   it "can show the information for a specific account" do
     account = FactoryGirl.create(:account)
     user = account.user
     
-    get :show, {:id => account.id, :auth_token => user.auth_token }
+    get :show, { id: account.id, auth_token: user.auth_token }
 
     expected = account.projects.to_json
     result = ActiveSupport::JSON.decode(response.body)
-    ActiveSupport::JSON.decode(expected).should == result
+    result["projects"].should =~ ActiveSupport::JSON.decode(expected) 
   end
 
   it "does not allow access to other users accounts" do

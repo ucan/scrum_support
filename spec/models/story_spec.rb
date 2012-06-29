@@ -25,8 +25,8 @@ describe Story do
         @story.tasks.length.should eql 0
         @story.save()
         @task = FactoryGirl.create(:task)
-        @task.save()
-        # TODO: Fix - this line shouldn't be needed.
+        #@task.save()
+        # TODO Fix - this line shouldn't be needed.
         @story.tasks << @task
         @story.tasks.length.should eql 1
         @story.tasks[0].story.should eql @story

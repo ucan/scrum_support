@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
 
   attr_accessible :email, :password, :password_confirmation, :auth_token
 
-  has_many :accounts, :uniq => true, :inverse_of => :user
+  has_many :accounts, :dependent => :destroy, :uniq => true, :inverse_of => :user
 
   before_save :ensure_auth_token
 
@@ -19,7 +19,8 @@ class User < ActiveRecord::Base
 
   def ensure_auth_token
     if !self.auth_token
-      self.auth_token = Digest::SHA1.hexdigest(rand(Rails.application.config.RAND_SEED).to_s)
+      #self.auth_token = Digest::SHA1.hexdigest(rand(Rails.application.config.RAND_SEED).to_s)
+      self.auth_token = SecureRandom.hex(16)
     end
   end
 end
