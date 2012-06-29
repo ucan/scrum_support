@@ -10,7 +10,8 @@ class UserController < ApplicationController
     else
       user = User.new(email: params[:email], password: params[:password], password_confirmation: params[:password_confirmation])
       if user.save
-        render json: { user: user, links: { accounts: "/accounts", projects: "/projects" } }, status: :created
+        render json: { user: { email: user.email, auth_token: user.auth_token }, 
+              links: { accounts: "/accounts", projects: "/projects" } }, status: :created
         return
       else
         render json: { error: I18n.t('request.bad_request')}, status: :bad_request

@@ -3,11 +3,10 @@ class StoriesController < ApplicationController
 	before_filter :authenticate
 
 	def show
-		user = user_from_auth_token
 		story = Story.find_by_id(params[:id])
     if !story.nil?
       projectMapping = ProjectMapping.where(project_id: story.project.id).first
-      if projectMapping && projectMapping.account.user == user
+      if projectMapping && projectMapping.account.user == current_user
         projectMapping.account.fetch_tasks(story)
         story.reload
         render json: { tasks: story.tasks, links: {} }, status: :ok # TODO links

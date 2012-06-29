@@ -4,16 +4,14 @@ class AccountsController < ApplicationController
 
   # Returns a list of account ids
   def list
-    user = user_from_auth_token
-    accounts = user.accounts
+    accounts = current_user.accounts
     render json: { accounts: accounts, links: {} }, status: :ok # TODO links
   end
 
   # Returns a list of projects for one of the users accounts
   def show
     begin
-      user = user_from_auth_token
-      account = user.accounts.find(params[:id]) #required as a part of the route
+      account = current_user.accounts.find(params[:id]) #required as a part of the route
 
       render json: {projects: account.projects, links: {} }, status: :ok # TODO links
 
@@ -50,8 +48,7 @@ class AccountsController < ApplicationController
         PtAccount.get_token(params[:email], params[:password])
       end
       ptAccount = PtAccount.new(api_token: api_token)
-      user = user_from_auth_token
-      user.accounts << ptAccount
+      current_user.accounts << ptAccount
       if (ptAccount.save)
         # TODO do we need to add links to 'created', and 'error' responses?
         render json: { account: ptAccount }, :status => :created,

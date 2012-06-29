@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe StoriesController do
 
+  include ActionController::HttpAuthentication::Token
+
   before(:all) do
     # Supress unnecessary methods for controller tests
     a = Account.new
@@ -25,7 +27,8 @@ describe StoriesController do
     FactoryGirl.create(:task, story: story)
     user = ProjectMapping.where(project_id: story.project.id).first.account.user
 
-    get :show, {:id => story.id, :auth_token => user.auth_token }
+    @request.env["HTTP_AUTHORIZATION"] = encode_credentials(user.auth_token)
+    get :show, {:id => story.id }
 
     result = ActiveSupport::JSON.decode(response.body)
     result["tasks"].should =~ ActiveSupport::JSON.decode(story.tasks.to_json)
@@ -34,7 +37,8 @@ describe StoriesController do
   it "handles and id that is not associated with a story" do
     user = FactoryGirl.create :user
 
-    get :show, { :id => 1, :auth_token => user.auth_token }
+    @request.env["HTTP_AUTHORIZATION"] = encode_credentials(user.auth_token)
+    get :show, { :id => 1 }
 
     result = ActiveSupport::JSON.decode(response.body)
     response.status.should eql 404

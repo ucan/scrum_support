@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120629070559) do
+ActiveRecord::Schema.define(:version => 20120629090451) do
 
   create_table "accounts", :force => true do |t|
     t.integer  "user_id"
@@ -20,6 +20,15 @@ ActiveRecord::Schema.define(:version => 20120629070559) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  create_table "api_keys", :force => true do |t|
+    t.string   "auth_token"
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "api_keys", ["auth_token"], :name => "index_api_keys_on_auth_token", :unique => true
 
   create_table "memberships", :force => true do |t|
     t.integer  "project_id"
@@ -88,7 +97,6 @@ ActiveRecord::Schema.define(:version => 20120629070559) do
 
   create_table "users", :force => true do |t|
     t.string   "email"
-    t.string   "auth_token"
     t.string   "password_digest"
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false

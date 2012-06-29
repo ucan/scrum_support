@@ -4,9 +4,8 @@ class ProjectsController < ApplicationController
 
   # Return a list of all projects (id, title) from all accounts
   def list
-    user = user_from_auth_token
     projects = []
-    user.accounts.each { |account|
+    current_user.accounts.each { |account|
       account.fetch_projects
       account.reload
       account.projects.each { |project|
@@ -17,11 +16,10 @@ class ProjectsController < ApplicationController
   end
 
   def show
-    user = user_from_auth_token
     project = Project.find_by_id(params[:id])
     if project
       projectMapping = ProjectMapping.where(project_id: project.id).first
-      if projectMapping && projectMapping.account.user == user
+      if projectMapping && projectMapping.account.user == current_user
         projectMapping.account.fetch_members(project)
         projectMapping.account.fetch_stories(project)
         project.reload
@@ -37,9 +35,9 @@ class ProjectsController < ApplicationController
 
   protected
 
-  def sync
-    user_from_auth_token.accounts.each { |account|
-      account.sync
-    }
-  end
+  # def sync
+  #   current_user.accounts.each { |account|
+  #     account.sync
+  #   }
+  # end
 end

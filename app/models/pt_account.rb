@@ -60,7 +60,6 @@ class PtAccount < Account
     if project_mapping
       PivotalTracker::Client.token = self.api_token
       PivotalTracker::Project.find(project_mapping.linked_id).stories.all.each do |ptStory|
-        puts "Story mapping count: #{project_mapping.story_mappings.count}, #{project.id}"
         existing_mapping = project_mapping.story_mappings.detect { |sm| sm.linked_id == ptStory.id }
         if existing_mapping
           update_story(existing_mapping.story, ptStory)
@@ -89,7 +88,6 @@ class PtAccount < Account
           update_task(existing_mapping.task, ptTask)
           temp_task_mappings << existing_mapping
         else
-          puts "hello"
           ourTask = Task.new(description: ptTask.description, story: story_mapping.story)
           temp_task_mappings << TaskMapping.new(linked_id: ptTask.id, task: ourTask)
         end      

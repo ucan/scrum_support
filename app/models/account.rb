@@ -3,9 +3,7 @@ class Account < ActiveRecord::Base
   belongs_to :user, :inverse_of => :accounts
   has_many :project_mappings, :dependent => :destroy, :uniq => true, :validate => true, :inverse_of => :account
   has_many :projects, :uniq => true, :through => :project_mappings
-  # has_many :story_mappings, :dependent => :destroy, :uniq => true, :validate => true, :inverse_of => :account
-  # has_many :task_mappings, :dependent => :destroy, :uniq => true, :validate => true, :inverse_of => :account
-
+ 
   validates_associated :user
   validates_presence_of :user
  

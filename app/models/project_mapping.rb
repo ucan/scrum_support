@@ -12,7 +12,6 @@ class ProjectMapping < ActiveRecord::Base
 
   protected
   def destroy_project
-  	puts "destrpy project"
   	project.destroy
   end
 end

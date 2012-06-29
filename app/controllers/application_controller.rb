@@ -1,15 +1,18 @@
 class ApplicationController < ActionController::API
   #protect_from_forgery
   #force_ssl
+  include ActionController::HttpAuthentication::Token::ControllerMethods
+  include ActionController::HttpAuthentication::Token
 
   def authenticate
-    if params[:auth_token].nil? || User.where(auth_token: params[:auth_token]).first.nil?
-      render json: {error: I18n.t('request.unauthorized') }, status: :unauthorized
+    puts "here"
+    authenticate_or_request_with_http_token do |token, options|
+      ApiKey.exists?(auth_token: token)
     end
-  end
+  end  
 
-  def user_from_auth_token
-    User.where(auth_token: params[:auth_token]).first if !params[:auth_token].nil?
+  def current_user
+    api_key = ApiKey.where(auth_token: token_and_options(request)).first
+    User.find(api_key.user_id) if api_key
   end
-  
 end

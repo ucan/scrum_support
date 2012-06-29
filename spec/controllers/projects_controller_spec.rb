@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe ProjectsController do
 
+  include ActionController::HttpAuthentication::Token
+
   before(:all) do
     # Supress unnecessary methods for controller tests
     a = Account.new
@@ -37,7 +39,8 @@ describe ProjectsController do
     project2 = FactoryGirl.create(:project)
     projectMapping2 = FactoryGirl.create(:project_mapping, account: account2, project: project2)
 
-    get :list, { :auth_token => user.auth_token }
+    @request.env["HTTP_AUTHORIZATION"] = encode_credentials(user.auth_token)
+    get :list
     result = ActiveSupport::JSON.decode(response.body)
     result["projects"].should =~ ActiveSupport::JSON.decode([project1, project2].to_json)
   end
@@ -49,7 +52,8 @@ describe ProjectsController do
     project.stories << FactoryGirl.create(:story)
     project.stories << FactoryGirl.create(:story)
 
-    get :show, {:id => project.id, :auth_token => user.auth_token }
+    @request.env["HTTP_AUTHORIZATION"] = encode_credentials(user.auth_token)
+    get :show, {:id => project.id }
     result = ActiveSupport::JSON.decode(response.body)
 
     result["stories"].should =~ ActiveSupport::JSON.decode(project.stories.to_json)
@@ -62,7 +66,8 @@ describe ProjectsController do
     project.people << FactoryGirl.create(:person)
     project.people << FactoryGirl.create(:person)
 
-    get :show, {:id => project.id, :auth_token => user.auth_token }
+    @request.env["HTTP_AUTHORIZATION"] = encode_credentials(user.auth_token)
+    get :show, {:id => project.id }
     result = ActiveSupport::JSON.decode(response.body)
 
     result["stories"].should =~ ActiveSupport::JSON.decode(project.stories.to_json)
@@ -70,7 +75,8 @@ describe ProjectsController do
 
   it "should provide an error if the project id is not valid" do
     user = FactoryGirl.create :user
-    get :show, { :id => 999999, :auth_token => user.auth_token }
+    @request.env["HTTP_AUTHORIZATION"] = encode_credentials(user.auth_token)
+    get :show, { :id => 999999 }
     result = ActiveSupport::JSON.decode response.body
     response.status.should eql 404
     result["error"].should eql I18n.t 'request.not_found'
@@ -82,7 +88,8 @@ describe ProjectsController do
 
     different_user = FactoryGirl.create :user
 
-    get :show, {:id => project.id, :auth_token => different_user.auth_token }
+    @request.env["HTTP_AUTHORIZATION"] = encode_credentials(different_user.auth_token)
+    get :show, {:id => project.id }
     result = ActiveSupport::JSON.decode(response.body)
     result["error"].should_not eql nil
     result["error"].should eql I18n.t('request.forbidden')

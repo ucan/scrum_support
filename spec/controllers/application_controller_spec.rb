@@ -2,38 +2,39 @@ require 'spec_helper'
 
 describe ApplicationController do
 
+  include ActionController::HttpAuthentication::Token
+
+  before(:all) do
+    Rails.application.routes.draw do
+        match '/authenticate' => "application#authenticate"
+        match '/user_from_auth_token' => "application#user_from_auth_token"
+      end
+  end
+
+  after(:all) do
+    Rails.application.reload_routes! #Reset routes to prevent mucking up routes for other tests
+  end
+
   describe "authenticate" do
     it "should return http 401:forbidden for unauthenticated users" do
-      Rails.application.routes.draw do
-        match '/authenticate' => "application#authenticate"
-      end
-
       get :authenticate
-
-      result = ActiveSupport::JSON.decode(response.body)
-      result["error"].should eql I18n.t('request.unauthorized')
       response.status.should eql 401
-
-      Rails.application.reload_routes! #Reset routes to prevent mucking up routes for other tests
     end
 
     it "should return nil for authenticated users" do
-      user = FactoryGirl.create :user
-      controller = ApplicationController.new
-      controller.params = {:auth_token => user.auth_token}
-      result = controller.authenticate
-      result.should eql nil
+      user = FactoryGirl.create :user 
+      @request.env["HTTP_AUTHORIZATION"] = encode_credentials(user.auth_token)
+      get :authenticate
+      response.status.should eql 200
     end
   end
 
-  describe "user_from_auth_token" do
+  describe "current_user" do
     it "should return the currently authenticated user" do
       user = FactoryGirl.create :user
-      controller = ApplicationController.new
-      controller.params = {:auth_token => user.auth_token}
-      result = controller.user_from_auth_token
+      @request.env["HTTP_AUTHORIZATION"] = encode_credentials(user.auth_token)
+      result = controller.current_user
       result.should eql user
     end
   end
-
 end

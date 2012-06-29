@@ -42,11 +42,28 @@ FactoryGirl.define do
     project
   end
 
+  factory :story_mapping, :class => :StoryMapping do
+    sequence :linked_id do |n|
+      n
+    end
+    story
+    project_mapping
+  end
+
   factory :task do
     sequence :description do |n|
       "task#{n}"
     end
     story
   end
+
+  factory :task_mapping, :class => :TaskMapping do
+    sequence :linked_id do |n|
+      n
+    end
+    task
+    story_mapping
+  end
+
 end
 
