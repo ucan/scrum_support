@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe TaskMapping do
+describe ExternalTaskLink do
   before(:each) do
-    @taskMapping = FactoryGirl.create(:task_mapping)
+    @taskMapping = FactoryGirl.create(:external_task_link)
   end
 
   it "should not be valid without a linked_id" do
@@ -18,14 +18,14 @@ describe TaskMapping do
   end
 
   it "should not be valid without a story_mapping" do
-    @taskMapping.story_mapping = nil
-    @taskMapping.should have(1).error_on(:story_mapping)
+    @taskMapping.external_story_link = nil
+    @taskMapping.should have(1).error_on(:external_story_link)
     @taskMapping.should_not be_valid
   end
 
   subject { @taskMapping }
   it { should respond_to(:linked_id) }
-  it { should respond_to(:story_mapping) }
+  it { should respond_to(:external_story_link) }
   it { should respond_to(:task) }
   it { should be_valid }
 end

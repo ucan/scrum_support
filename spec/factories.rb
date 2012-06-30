@@ -19,7 +19,7 @@ FactoryGirl.define do
     end
   end
 
-  factory :project_mapping, :class => ProjectMapping do
+  factory :external_project_link, :class => ExternalProjectLink do
     sequence :linked_id do |n|
       n
     end
@@ -31,8 +31,6 @@ FactoryGirl.define do
     sequence :title do |n|
       "project#{n}"
     end
-    #project_mapping
-    #association :project_mapping, :strategy => :build
   end
 
   factory :story do
@@ -42,12 +40,12 @@ FactoryGirl.define do
     project
   end
 
-  factory :story_mapping, :class => :StoryMapping do
+  factory :external_story_link, :class => :ExternalStoryLink do
     sequence :linked_id do |n|
       n
     end
     story
-    project_mapping
+    external_project_link
   end
 
   factory :task do
@@ -57,12 +55,12 @@ FactoryGirl.define do
     story
   end
 
-  factory :task_mapping, :class => :TaskMapping do
+  factory :external_task_link, :class => :ExternalTaskLink do
     sequence :linked_id do |n|
       n
     end
     task
-    story_mapping
+    external_story_link
   end
 
 end

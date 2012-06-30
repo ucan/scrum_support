@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe StoryMapping do
+describe ExternalStoryLink do
   before(:each) do
-    @storyMapping = FactoryGirl.create(:story_mapping)
+    @storyMapping = FactoryGirl.create(:external_story_link)
   end
 
   it "should not be valid without a linked_id" do
@@ -18,14 +18,14 @@ describe StoryMapping do
   end
 
   it "should not be valid without a project_mapping" do
-    @storyMapping.project_mapping = nil
-    @storyMapping.should have(1).error_on(:project_mapping)
+    @storyMapping.external_project_link = nil
+    @storyMapping.should have(1).error_on(:external_project_link)
     @storyMapping.should_not be_valid
   end
 
   subject { @storyMapping }
   it { should respond_to(:linked_id) }
-  it { should respond_to(:project_mapping) }
+  it { should respond_to(:external_project_link) }
   it { should respond_to(:story) }
   it { should be_valid }
 end

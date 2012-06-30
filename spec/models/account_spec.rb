@@ -14,24 +14,24 @@ describe Account do
 
   it "Should be able to add a new ProjectMapping, and directly retrieve our project" do
     project = FactoryGirl.create(:project)
-    projectMapping = FactoryGirl.create(:project_mapping, project: project)
-    @account.project_mappings << projectMapping
+    external_project_link = FactoryGirl.create(:external_project_link, project: project)
+    @account.external_project_links << external_project_link
     @account.save!
-    @account.project_mappings.length.should eql 1
+    @account.external_project_links.length.should eql 1
     @account.projects.should eql [project]
-    @account.project_mappings[0].project.should eql project
+    @account.external_project_links[0].project.should eql project
   end
 
   it "should not be able to add a duplicate project_mapping" do
     project = FactoryGirl.create(:project)
-    projectMapping = FactoryGirl.create(:project_mapping, project: project)
-    @account.project_mappings << projectMapping
+    external_project_link = FactoryGirl.create(:external_project_link, project: project)
+    @account.external_project_links << external_project_link
     @account.save!
-    @account.project_mappings.length.should eql 1
+    @account.external_project_links.length.should eql 1
     @account.projects.length.should eql 1
-    @account.project_mappings << projectMapping
+    @account.external_project_links << external_project_link
     @account.save!
-    @account.project_mappings.length.should eql 1
+    @account.external_project_links.length.should eql 1
     @account.projects.length.should eql 1
   end
 
@@ -41,7 +41,7 @@ describe Account do
 
   subject { @account }
   it { should respond_to(:user) }
-  it { should respond_to(:project_mappings) }
+  it { should respond_to(:external_project_links) }
   it { should respond_to(:projects) }
   it { should be_valid }
 end

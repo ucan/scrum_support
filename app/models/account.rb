@@ -1,8 +1,8 @@
 class Account < ActiveRecord::Base
 
   belongs_to :user, :inverse_of => :accounts
-  has_many :project_mappings, :dependent => :destroy, :uniq => true, :validate => true, :inverse_of => :account
-  has_many :projects, :uniq => true, :through => :project_mappings
+  has_many :external_project_links, :dependent => :destroy, :uniq => true, :validate => true, :inverse_of => :account
+  has_many :projects, :uniq => true, :through => :external_project_links
  
   validates_associated :user
   validates_presence_of :user

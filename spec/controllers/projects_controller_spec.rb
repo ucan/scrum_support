@@ -31,13 +31,13 @@ describe ProjectsController do
 
   it "should return all the projects for a user" do
     project1 = FactoryGirl.create(:project)
-    projectMapping1 = FactoryGirl.create(:project_mapping, project: project1)
-    account1 = projectMapping1.account
+    external_project_link1 = FactoryGirl.create(:external_project_link, project: project1)
+    account1 = external_project_link1.account
     user = account1.user
 
     account2 = FactoryGirl.create(:account, user: user)
     project2 = FactoryGirl.create(:project)
-    projectMapping2 = FactoryGirl.create(:project_mapping, account: account2, project: project2)
+    external_project_link2 = FactoryGirl.create(:external_project_link, account: account2, project: project2)
 
     @request.env["HTTP_AUTHORIZATION"] = encode_credentials(user.auth_token)
     get :list
@@ -47,8 +47,8 @@ describe ProjectsController do
 
   it "should return a list of stories for a project" do
     project = FactoryGirl.create(:project)
-    projectMapping = FactoryGirl.create(:project_mapping, project: project)
-    user = projectMapping.account.user
+    external_project_link = FactoryGirl.create(:external_project_link, project: project)
+    user = external_project_link.account.user
     project.stories << FactoryGirl.create(:story)
     project.stories << FactoryGirl.create(:story)
 
@@ -61,8 +61,8 @@ describe ProjectsController do
 
   it "should return a list of members for a project" do
     project = FactoryGirl.create(:project)
-    projectMapping = FactoryGirl.create(:project_mapping, project: project)
-    user = projectMapping.account.user
+    external_project_link = FactoryGirl.create(:external_project_link, project: project)
+    user = external_project_link.account.user
     project.people << FactoryGirl.create(:person)
     project.people << FactoryGirl.create(:person)
 

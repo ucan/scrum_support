@@ -18,10 +18,10 @@ class ProjectsController < ApplicationController
   def show
     project = Project.find_by_id(params[:id])
     if project
-      projectMapping = ProjectMapping.where(project_id: project.id).first
-      if projectMapping && projectMapping.account.user == current_user
-        projectMapping.account.fetch_members(project)
-        projectMapping.account.fetch_stories(project)
+      external_project_link = ExternalProjectLink.where(project_id: project.id).first
+      if external_project_link && external_project_link.account.user == current_user
+        external_project_link.account.fetch_members(project)
+        external_project_link.account.fetch_stories(project)
         project.reload
         render json: { people: project.people, stories: project.stories, links: {} }, status: :ok # TODO links
       else
