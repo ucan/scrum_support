@@ -11,7 +11,6 @@ describe UserController do
       response.header['Content-Type'].should include 'application/json'
       response.response_code.should eql 201
       result = ActiveSupport::JSON.decode(response.body) #User.new.from_json(response.body)
-      result["user"]["email"].should eql email
       result["user"]["auth_token"].nil?.should eql false
     end
 
@@ -41,7 +40,7 @@ describe UserController do
       user = FactoryGirl.create(:user)
       get :show, { :email => user.email, :password => user.password }
       response.response_code.should eql 200
-      expected = user.to_json
+      expected = { auth_token: user.auth_token }.to_json
       result = ActiveSupport::JSON.decode(response.body)
       result["user"].should eql ActiveSupport::JSON.decode(expected)
     end

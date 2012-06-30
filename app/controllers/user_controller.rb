@@ -7,7 +7,6 @@ class UserController < ApplicationController
       return
     elsif params[:email].nil? || params[:password].nil? || params[:password_confirmation].nil? ||
                (params[:password] != params[:password_confirmation])
-      	puts "#{params[:email]}, #{params[:password]}, #{params[:password_confirmation]}"
         render json: { error: "#{I18n.t('request.bad_request')}: Passwords do not match."}, status: :bad_request
     else
       user = User.new(email: params[:email], password: params[:password], password_confirmation: params[:password_confirmation])
@@ -16,7 +15,7 @@ class UserController < ApplicationController
               links: { accounts: "/accounts", projects: "/projects" } }, status: :created
         return
       else
-        render json: { error: I18n.t('request.bad_request')}, status: :bad_request
+        render json: { error: "#{I18n.t('request.bad_request')}: user.errors" }, status: :bad_request
         return
       end
     end
