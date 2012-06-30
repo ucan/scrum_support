@@ -12,17 +12,17 @@ class User < ActiveRecord::Base
   validates_presence_of :password, :on => :create
   validates_presence_of :email
   validates_uniqueness_of :email
-
+  validate_email_format :email
 
   def as_json(options = {})
     super(:only => [:email])
   end
 
-  def ensure_api_key
-    self.api_key = ApiKey.new if self.api_key.nil?
-  end
-
   def auth_token
     self.api_key.auth_token
+  end
+
+  def ensure_api_key
+    self.api_key = ApiKey.new if self.api_key.nil?
   end
 end

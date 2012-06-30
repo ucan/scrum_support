@@ -13,7 +13,7 @@ class PtAccount < Account
   end
 
   def fetch_projects
-    temp_project_mappings = []
+    temp_project_mappings = self.project_mappings
     PivotalTracker::Client.token = self.api_token
   	PivotalTracker::Project.all.each do |ptProject|
       existing_mapping = self.project_mappings.detect { |pm| pm.linked_id == ptProject.id }

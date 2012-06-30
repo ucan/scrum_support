@@ -11,6 +11,9 @@ gem 'pg', '0.12.2'
 #gem 'devise'
 gem 'bcrypt-ruby'
 
+#Email validation
+gem 'email-validator', '0.2.3'
+
 # Project Management API wrappers
 gem 'pivotal-tracker', '0.5.4'
 

@@ -5,7 +5,6 @@ class ApplicationController < ActionController::API
   include ActionController::HttpAuthentication::Token
 
   def authenticate
-    puts "here"
     authenticate_or_request_with_http_token do |token, options|
       ApiKey.exists?(auth_token: token)
     end
