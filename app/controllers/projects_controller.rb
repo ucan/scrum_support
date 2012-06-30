@@ -19,7 +19,7 @@ class ProjectsController < ApplicationController
     project = Project.find_by_id(params[:id])
     if project
       external_project_link = ExternalProjectLink.where(project_id: project.id).first
-      if external_project_link && external_project_link.account.user == current_user
+      if external_project_link && external_project_link.accounts.includes?(current_user
         external_project_link.account.fetch_members(project)
         external_project_link.account.fetch_stories(project)
         project.reload

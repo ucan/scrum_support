@@ -23,8 +23,9 @@ FactoryGirl.define do
     sequence :linked_id do |n|
       n
     end
-    account
+    
     project
+    before(:create) {|epl| epl.accounts = [FactoryGirl.create(:account)]}
   end
 
   factory :project do

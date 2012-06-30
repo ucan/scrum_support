@@ -21,14 +21,15 @@ describe ExternalProjectLink do
   end
 
   it "should not be valid without an account" do
-    @external_project_link.account = nil
-    @external_project_link.should have(1).error_on(:account)
+    @external_project_link.accounts = []
     @external_project_link.should_not be_valid
+    @external_project_link.should have(1).error_on(:accounts)
+    
   end
 
   subject { @external_project_link }
   it { should respond_to(:linked_id) }
   it { should respond_to(:project) }
-  it { should respond_to(:account) }
+  it { should respond_to(:accounts) }
   it { should be_valid }
 end
