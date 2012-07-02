@@ -7,20 +7,20 @@ describe UserController do
     it "should be able to create a new user" do
       email = "tester@testing.com"
       password = "password"
-      post :create, { :email => email, :password => password, :password_confirmation => password }
+      post :create, { :email => email, :password => password }
       response.header['Content-Type'].should include 'application/json'
       response.response_code.should eql 201
       result = ActiveSupport::JSON.decode(response.body) #User.new.from_json(response.body)
       result["user"]["auth_token"].nil?.should eql false
     end
 
-    it "should return 400:bad request when creating a new user with non-matching passwords" do
+    it "should return 400:bad request when email and password are not supplied" do
       email = "tester@testing.com"
       password = "password"
-      post :create, { :email => email, :password => password, :password_confirmation => "not password" }
+      post :create
       response.response_code.should eql 400
       result = ActiveSupport::JSON.decode(response.body)
-      result["error"].should eql "#{I18n.t('request.bad_request')}: Passwords do not match."
+      result["error"].should eql "#{I18n.t('request.bad_request')}: Fields [email, password] are required."
     end
 
     it "should return 409:conflict when creating a duplicate user" do
