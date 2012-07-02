@@ -25,14 +25,13 @@ describe Account do
   it "should not be able to add a duplicate project_mapping" do
     project = FactoryGirl.create(:project)
     external_project_link = FactoryGirl.create(:external_project_link, project: project)
-    @account.external_project_links << external_project_link
-    @account.save!
-    @account.external_project_links.length.should eql 1
-    @account.projects.length.should eql 1
-    @account.external_project_links << external_project_link
-    @account.save!
-    @account.external_project_links.length.should eql 1
-    @account.projects.length.should eql 1
+    account = external_project_link.accounts.first
+    account.external_project_links.length.should eql 1
+    account.projects.length.should eql 1
+    account.external_project_links << external_project_link
+    account.save!
+    account.external_project_links.length.should eql 1
+    account.projects.length.should eql 1
   end
 
   it "should raise a NotImplementedError on fetch_projects" do

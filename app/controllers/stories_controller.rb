@@ -6,10 +6,15 @@ class StoriesController < ApplicationController
 		story = Story.find_by_id(params[:id])
     if !story.nil?
       external_project_link = ExternalProjectLink.where(project_id: story.project.id).first
-      if external_project_link && external_project_link.account.user == current_user
-        external_project_link.account.fetch_tasks(story)
-        story.reload
-        render json: { tasks: story.tasks, links: {} }, status: :ok # TODO links
+      if external_project_link
+        external_project_link.accounts.each do |account|
+          if account.user == current_user
+            account.fetch_tasks(story)
+            story.reload
+            render json: { tasks: story.tasks, links: {} }, status: :ok # TODO links
+            break
+          end
+        end
       else
         render json: { error: I18n.t('request.forbidden') }, status: :forbidden
       end

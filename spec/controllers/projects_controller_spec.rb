@@ -49,18 +49,14 @@ describe ProjectsController do
   it "should return a list of stories for a project" do
     project = FactoryGirl.create(:project)
     external_project_link = FactoryGirl.create(:external_project_link, project: project)
-    puts "hi"
     
     user = external_project_link.accounts[0].user
     project.stories << FactoryGirl.create(:story)
     project.stories << FactoryGirl.create(:story)
-    #puts external_project_link.accounts[0].projects[0].stories.inspect
-    puts Project.where(:id => project.id).first.stories.inspect
-
+    
     @request.env["HTTP_AUTHORIZATION"] = encode_credentials(user.auth_token)
     get :show, {:id => project.id }
     result = ActiveSupport::JSON.decode(response.body)
-    puts result
     result["stories"].should =~ ActiveSupport::JSON.decode(project.stories.to_json)
   end
 

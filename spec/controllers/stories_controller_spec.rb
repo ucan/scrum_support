@@ -25,7 +25,7 @@ describe StoriesController do
     external_project_link = FactoryGirl.create(:external_project_link)
     story = FactoryGirl.create(:story, project: external_project_link.project)
     FactoryGirl.create(:task, story: story)
-    user = ExternalProjectLink.where(project_id: story.project.id).first.account.user
+    user = ExternalProjectLink.where(project_id: story.project.id).first.accounts.first.user
 
     @request.env["HTTP_AUTHORIZATION"] = encode_credentials(user.auth_token)
     get :show, {:id => story.id }
