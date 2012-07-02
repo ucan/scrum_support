@@ -58,6 +58,7 @@ class AccountsController < ApplicationController
         render json: { error: "#{I18n.t('request.bad_request')}: #{ptAccount.errors}"}, status: :bad_request
       end
     rescue RestClient::Unauthorized
+      puts "hi"
       render json: { error: "#{I18n.t('request.unauthorized')}: Incorrect email or password"}, status: :unauthorized
     end
   end

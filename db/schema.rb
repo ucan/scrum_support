@@ -37,7 +37,6 @@ ActiveRecord::Schema.define(:version => 20120630130107) do
 
   create_table "external_project_links", :force => true do |t|
     t.integer  "linked_id"
-    t.integer  "account_id"
     t.integer  "project_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false

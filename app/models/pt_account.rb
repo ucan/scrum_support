@@ -13,20 +13,19 @@ class PtAccount < Account
   end
 
   def fetch_projects
-    temp_external_project_links = self.external_project_links
     PivotalTracker::Client.token = self.api_token
   	PivotalTracker::Project.all.each do |ptProject|
-      existing_mapping = self.external_project_links.detect { |pm| pm.linked_id == ptProject.id }
+      existing_mapping = ExternalProjectLink.where(linked_id: ptProject.id).first #self.external_project_links.detect { |pm| pm.linked_id == ptProject.id }
       if existing_mapping
         update_project(existing_mapping.project, ptProject)
-        temp_external_project_links << existing_mapping
+        self.external_project_links << existing_mapping
       else        
         ourProject = Project.new(title: ptProject.name)
-        mapping = ProjectMapping.new(linked_id: ptProject.id, project: ourProject)
-        temp_external_project_links << mapping
+        mapping = ExternalProjectLink.new(linked_id: ptProject.id, project: ourProject)
+        mapping.accounts << self
+        mapping.save!
       end
   	end
-    self.external_project_links = temp_external_project_links
   end
 
   def fetch_members(project)
