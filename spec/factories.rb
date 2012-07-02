@@ -10,6 +10,10 @@ FactoryGirl.define do
     user
   end
 
+  factory :api_key do
+    user
+  end
+
   factory :person do
     sequence :email do |n|
       "fred#{n}@testing.com"

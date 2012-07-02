@@ -23,7 +23,7 @@ class ProjectsController < ApplicationController
         projectMapping.account.fetch_members(project)
         projectMapping.account.fetch_stories(project)
         project.reload
-        render json: { people: project.people, stories: project.stories, links: {} }, status: :ok # TODO links
+        render json: { title: project.title, people: project.people, stories: project.stories, links: {} }, status: :ok # TODO links
       else
         render json: {error: I18n.t('request.forbidden') }, status: :forbidden
       end
