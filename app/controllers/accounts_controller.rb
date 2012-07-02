@@ -11,8 +11,8 @@ class AccountsController < ApplicationController
   # Returns a list of projects for one of the users accounts
   def show
     begin
+      # TODO fetch_projects
       account = current_user.accounts.find(params[:id]) #required as a part of the route
-
       render json: {projects: account.projects, links: {} }, status: :ok # TODO links
 
     rescue ActiveRecord::RecordNotFound
@@ -23,7 +23,7 @@ class AccountsController < ApplicationController
   def create
     errors = ""
     # check if we are creating a pt account
-    if params[:type] == "pivotal_tracker"
+    if params[:type] == "PtAccount"
       if params[:api_token].nil? && (params[:email].nil? || params[:password].nil?)
         errors << "Either an api_token or email and password are required."
       else
@@ -31,7 +31,7 @@ class AccountsController < ApplicationController
         return
       end
     else
-      errors << "Invalid account type."
+      errors << "Invalid account type: #{params[:type] || 'missing'}. Valid options include: pivotal_tracker"
     end
     # invalid type specified
     render json: { error: "#{I18n.t('request.bad_request')}: #{errors}"}, status: :bad_request
@@ -49,13 +49,14 @@ class AccountsController < ApplicationController
       end
       ptAccount = PtAccount.new(api_token: api_token)
       current_user.accounts << ptAccount
-      if (ptAccount.save)
+      if (ptAccount.save)        
         # TODO do we need to add links to 'created', and 'error' responses?
         render json: { account: ptAccount }, :status => :created,
                       :location => url_for(controller: :accounts, action: :show, id: ptAccount.id)
         return
       else
-        render json: { error: "#{I18n.t('request.bad_request')}: #{ptAccount.errors}"}, status: :bad_request
+        # TODO Return 403 forbidden if account already exists
+        render json: { error: "#{I18n.t('request.bad_request')}: #{ptAccount.errors.full_messages}"}, status: :bad_request
       end
     rescue RestClient::Unauthorized
       render json: { error: "#{I18n.t('request.unauthorized')}: Incorrect email or password"}, status: :unauthorized

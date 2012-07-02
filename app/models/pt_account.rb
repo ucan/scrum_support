@@ -6,6 +6,7 @@ class PtAccount < Account
   attr_accessible :api_token
 
   validates_presence_of :api_token, :on => :create
+  validates_uniqueness_of :api_token
   
   # Retrieve a users api_token from PT using email and password
   def self.get_token(email, password)
@@ -22,7 +23,7 @@ class PtAccount < Account
         temp_external_project_links << existing_mapping
       else        
         ourProject = Project.new(title: ptProject.name)
-        mapping = ProjectMapping.new(linked_id: ptProject.id, project: ourProject)
+        mapping = ExternalProjectLink.new(linked_id: ptProject.id, project: ourProject)
         temp_external_project_links << mapping
       end
   	end
