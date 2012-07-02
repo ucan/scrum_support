@@ -80,23 +80,23 @@ describe AccountsController do
       response.response_code.should eql 401
     end
 
-    it "provides 201 code and a link to the accounts base uri for a valid request using email and password" do
-      user = FactoryGirl.create :user
-      @request.env["HTTP_AUTHORIZATION"] = encode_credentials(user.auth_token)
-      post :create, {:type => "pivotal_tracker", :email => "lordtestymctesticles@gmail.com", :password => "testicles"}
-      result = ActiveSupport::JSON.decode(response.body)
-      response.response_code.should eql 201
-      response.location.should include "/accounts/"
-    end
+    #it "provides 201 code and a link to the accounts base uri for a valid request using email and password" do
+    #  user = FactoryGirl.create :user
+    #  @request.env["HTTP_AUTHORIZATION"] = encode_credentials(user.auth_token)
+    #  post :create, {:type => "pivotal_tracker", :email => "lordtestymctesticles@gmail.com", :password => "testicles"}
+    #  result = ActiveSupport::JSON.decode(response.body)
+    #  response.response_code.should eql 201
+    #  response.location.should include "/accounts/"
+    #end
 
-    it "provides 201 code and a link to the accounts base uri for a valid request using api_token" do
-      user = FactoryGirl.create :user    
-      @request.env["HTTP_AUTHORIZATION"] = encode_credentials(user.auth_token)  
-      post :create, {:type => "pivotal_tracker", :api_token => 'c66fb689d2fe55512b1ce75ffab4b1d6'}
-      result = ActiveSupport::JSON.decode(response.body)
-      response.response_code.should eql 201
-      response.location.should include "/accounts/"
-    end
+    #it "provides 201 code and a link to the accounts base uri for a valid request using api_token" do
+    #  user = FactoryGirl.create :user    
+    #  @request.env["HTTP_AUTHORIZATION"] = encode_credentials(user.auth_token)  
+    #  post :create, {:type => "pivotal_tracker", :api_token => 'c66fb689d2fe55512b1ce75ffab4b1d6'}
+    #  result = ActiveSupport::JSON.decode(response.body)
+    #  response.response_code.should eql 201
+    #  response.location.should include "/accounts/"
+    #end
   end
 
 end
