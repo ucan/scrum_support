@@ -18,12 +18,18 @@ class ProjectsController < ApplicationController
   def show
     project = Project.find_by_id(params[:id])
     if project
-      projectMapping = ProjectMapping.where(project_id: project.id).first
-      if projectMapping && projectMapping.account.user == current_user
-        projectMapping.account.fetch_members(project)
-        projectMapping.account.fetch_stories(project)
-        project.reload
-        render json: { title: project.title, people: project.people, stories: project.stories, links: {} }, status: :ok # TODO links
+      external_project_link = ExternalProjectLink.where(project_id: project.id).first
+      if external_project_link 
+        external_project_link.accounts.each do |account|
+          if(account.user == current_user)
+            
+            account.fetch_members(project)
+            account.fetch_stories(project)
+            project.reload
+            render json: { title: project.title, people: project.people, stories: project.stories, links: {} }, status: :ok # TODO links
+            break
+          end
+        end
       else
         render json: {error: I18n.t('request.forbidden') }, status: :forbidden
       end

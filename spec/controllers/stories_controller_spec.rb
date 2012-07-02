@@ -22,10 +22,10 @@ describe StoriesController do
   end
   
   it "should allow a user to retrieve a list of tasks for one of their stories" do
-    projectMapping = FactoryGirl.create(:project_mapping)
-    story = FactoryGirl.create(:story, project: projectMapping.project)
+    external_project_link = FactoryGirl.create(:external_project_link)
+    story = FactoryGirl.create(:story, project: external_project_link.project)
     FactoryGirl.create(:task, story: story)
-    user = ProjectMapping.where(project_id: story.project.id).first.account.user
+    user = ExternalProjectLink.where(project_id: story.project.id).first.accounts.first.user
 
     @request.env["HTTP_AUTHORIZATION"] = encode_credentials(user.auth_token)
     get :show, {:id => story.id }

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120629090451) do
+ActiveRecord::Schema.define(:version => 20120630130107) do
 
   create_table "accounts", :force => true do |t|
     t.integer  "user_id"
@@ -19,6 +19,11 @@ ActiveRecord::Schema.define(:version => 20120629090451) do
     t.string   "type"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "accounts_external_project_links", :force => true do |t|
+    t.integer "account_id"
+    t.integer "external_project_link_id"
   end
 
   create_table "api_keys", :force => true do |t|
@@ -29,6 +34,32 @@ ActiveRecord::Schema.define(:version => 20120629090451) do
   end
 
   add_index "api_keys", ["auth_token"], :name => "index_api_keys_on_auth_token", :unique => true
+
+  create_table "external_project_links", :force => true do |t|
+    t.integer  "linked_id"
+    t.integer  "account_id"
+    t.integer  "project_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "external_project_links", ["project_id", "linked_id"], :name => "index_external_project_links_on_project_id_and_linked_id", :unique => true
+
+  create_table "external_story_links", :force => true do |t|
+    t.integer  "linked_id"
+    t.integer  "external_project_link_id"
+    t.integer  "story_id"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+  end
+
+  create_table "external_task_links", :force => true do |t|
+    t.integer  "linked_id"
+    t.integer  "external_story_link_id"
+    t.integer  "task_id"
+    t.datetime "created_at",             :null => false
+    t.datetime "updated_at",             :null => false
+  end
 
   create_table "memberships", :force => true do |t|
     t.integer  "project_id"
@@ -46,16 +77,6 @@ ActiveRecord::Schema.define(:version => 20120629090451) do
     t.datetime "updated_at", :null => false
   end
 
-  create_table "project_mappings", :force => true do |t|
-    t.integer  "linked_id"
-    t.integer  "account_id"
-    t.integer  "project_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  add_index "project_mappings", ["project_id", "linked_id"], :name => "index_project_mappings_on_project_id_and_linked_id", :unique => true
-
   create_table "projects", :force => true do |t|
     t.string   "title"
     t.datetime "created_at", :null => false
@@ -67,22 +88,6 @@ ActiveRecord::Schema.define(:version => 20120629090451) do
     t.string   "title"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
-  end
-
-  create_table "story_mappings", :force => true do |t|
-    t.integer  "linked_id"
-    t.integer  "project_mapping_id"
-    t.integer  "story_id"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
-  end
-
-  create_table "task_mappings", :force => true do |t|
-    t.integer  "linked_id"
-    t.integer  "story_mapping_id"
-    t.integer  "task_id"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
   end
 
   create_table "tasks", :force => true do |t|
