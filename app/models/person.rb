@@ -4,7 +4,7 @@ class Person < ActiveRecord::Base
 
 	has_many :memberships, :dependent => :destroy, :uniq => true, :inverse_of => :person
 	has_many :projects, :through => :memberships, :uniq => true
-
+  has_many :tasks, :inverse_of => :owner, :foreign_key => :owner_id
 	def as_json(options = {})
     	super(:only => [:id, :name, :email])
   	end

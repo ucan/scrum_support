@@ -93,6 +93,7 @@ ActiveRecord::Schema.define(:version => 20120630130107) do
     t.string   "description"
     t.string   "status"
     t.integer  "story_id"
+    t.integer  "owner_id"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
   end

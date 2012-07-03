@@ -2,6 +2,7 @@ class Task < ActiveRecord::Base
   attr_accessible :description, :story, :status
   belongs_to :story
 
+  belongs_to :owner, class_name: Person 
   validates_inclusion_of :status, :in => %w(not_started started blocked done)
 
   validates_presence_of :description, :story, :status

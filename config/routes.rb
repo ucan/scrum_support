@@ -7,7 +7,7 @@ ScrumSupport::Application.routes.draw do
   #User Controller
   get "/user" => "user#show" # use email & password for auth_token retrieval
   post "/user" => "user#create"
-  
+  match "/user" => "user#edit", via: [:patch]  
   #Accounts Controller
   get "/accounts" => "accounts#list"
   get "/accounts/:id" => "accounts#show"
@@ -22,4 +22,6 @@ ScrumSupport::Application.routes.draw do
   #Stories Controller
   get "/stories/:id" => "stories#show", :constraints => { :id => /\d+/ }
   
+  #Tasks Controller
+  get "/tasks" => "tasks#list"
 end

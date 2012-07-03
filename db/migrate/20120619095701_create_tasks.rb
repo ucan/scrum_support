@@ -4,7 +4,7 @@ class CreateTasks < ActiveRecord::Migration
       t.string :description
       t.string :status
       t.references :story
-
+      t.references :owner
       t.timestamps
     end
     add_index :tasks, :story_id
