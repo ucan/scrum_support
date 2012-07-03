@@ -31,7 +31,7 @@ class AccountsController < ApplicationController
         return
       end
     else
-      errors << "Invalid account type: #{params[:type] || 'missing'}. Valid options include: pivotal_tracker"
+      errors << "Invalid account type: #{params[:type] || 'missing'}. Valid options include: PtAccount"
     end
     # invalid type specified
     render json: { error: "#{I18n.t('request.bad_request')}: #{errors}"}, status: :bad_request
