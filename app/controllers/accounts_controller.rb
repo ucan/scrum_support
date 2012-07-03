@@ -51,7 +51,7 @@ class AccountsController < ApplicationController
       current_user.accounts << ptAccount
       if (ptAccount.save)        
         # TODO do we need to add links to 'created', and 'error' responses?
-        render json: { account: ptAccount }, :status => :created,
+        render json: { id: ptAccount.id, type: ptAccount.type, api_token: ptAccount.api_token }, :status => :created,
                       :location => url_for(controller: :accounts, action: :show, id: ptAccount.id)
         return
       else

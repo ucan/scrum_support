@@ -2,7 +2,6 @@ class CreateExternalProjectLinks < ActiveRecord::Migration
   def change
     create_table :external_project_links do |t|
       t.integer	:linked_id
-      t.references :account
       t.references :project
 
       t.timestamps

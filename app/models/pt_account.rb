@@ -14,20 +14,19 @@ class PtAccount < Account
   end
 
   def fetch_projects
-    temp_external_project_links = self.external_project_links
     PivotalTracker::Client.token = self.api_token
   	PivotalTracker::Project.all.each do |ptProject|
-      existing_mapping = self.external_project_links.detect { |pm| pm.linked_id == ptProject.id }
+      existing_mapping = ExternalProjectLink.where(linked_id: ptProject.id).first #self.external_project_links.detect { |pm| pm.linked_id == ptProject.id }
       if existing_mapping
         update_project(existing_mapping.project, ptProject)
-        temp_external_project_links << existing_mapping
+        self.external_project_links << existing_mapping
       else        
         ourProject = Project.new(title: ptProject.name)
         mapping = ExternalProjectLink.new(linked_id: ptProject.id, project: ourProject)
-        temp_external_project_links << mapping
+        mapping.accounts << self
+        mapping.save!
       end
   	end
-    self.external_project_links = temp_external_project_links
   end
 
   def fetch_members(project)
@@ -56,22 +55,22 @@ class PtAccount < Account
 
   def fetch_stories(project)
     # project.stories = []
-    temp_story_mappings = []
+    temp_story_links = []
     external_project_link = self.external_project_links.detect { |pm| pm.project == project }
     if external_project_link
       PivotalTracker::Client.token = self.api_token
       PivotalTracker::Project.find(external_project_link.linked_id).stories.all.each do |ptStory|
-        existing_mapping = external_project_link.story_mappings.detect { |sm| sm.linked_id == ptStory.id }
-        if existing_mapping
-          update_story(existing_mapping.story, ptStory)
-          temp_story_mappings << existing_mapping
+        existing_link = external_project_link.external_story_links.detect { |esl| esl.linked_id == ptStory.id }
+        if existing_link
+          update_story(existing_link.story, ptStory)
+          temp_story_links << existing_link
         else
           ourStory = Story.new(title: ptStory.name, project: external_project_link.project)
-          new_mapping = StoryMapping.new(linked_id: ptStory.id, story: ourStory)
-          temp_story_mappings << new_mapping
+          new_link = ExternalStoryLink.new(linked_id: ptStory.id, story: ourStory)
+          temp_story_links << new_link
         end        
       end
-      external_project_link.story_mappings = temp_story_mappings
+      external_project_link.external_story_links = temp_story_links
     else
       # error handling
     end
