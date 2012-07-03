@@ -21,9 +21,9 @@ gem 'pivotal-tracker', '0.5.4'
 group :test, :development do
   gem 'rspec-rails', '2.10.1'
   gem 'capybara', '1.1.2'
-  gem 'guard-spork', '0.3.2'
-  gem 'spork', '0.9.0'
-  gem 'guard-rspec', '0.5.5'
+  gem 'guard-spork', '1.1.0'
+  gem 'spork', '0.9.2'
+  gem 'guard-rspec', '1.1.0'
   gem 'factory_girl_rails', '3.5.0'
 end
 
