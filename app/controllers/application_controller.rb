@@ -8,6 +8,9 @@ class ApplicationController < ActionController::API
     authenticate_or_request_with_http_token do |token, options|
       ApiKey.exists?(auth_token: token)
     end
+    # authenticate_or_request_with_http_token do |token, options|
+    #   apiKey = ApiKey.where(auth_token: token).first
+    #   @current_user = apiKey.user if apiKey
   end  
 
   def current_user

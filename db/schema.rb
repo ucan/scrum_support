@@ -21,6 +21,8 @@ ActiveRecord::Schema.define(:version => 20120630130107) do
     t.datetime "updated_at", :null => false
   end
 
+  add_index "accounts", ["api_token"], :name => "index_accounts_on_api_token", :unique => true
+
   create_table "accounts_external_project_links", :force => true do |t|
     t.integer "account_id"
     t.integer "external_project_link_id"

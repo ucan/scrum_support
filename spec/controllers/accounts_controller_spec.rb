@@ -51,13 +51,13 @@ describe AccountsController do
       
       result = ActiveSupport::JSON.decode(response.body)
       response.response_code.should eql 400
-      result["error"].should eql "#{I18n.t('request.bad_request')}: Invalid account type."
+      result["error"].should include "#{I18n.t('request.bad_request')}: "
     end
 
     it "provides 400 error for pivotal tracker account type without email (or api_token)" do
       user = FactoryGirl.create :user      
       @request.env["HTTP_AUTHORIZATION"] = encode_credentials(user.auth_token)
-      post :create, { :type => "pivotal_tracker", :password => "holycrap"}
+      post :create, { :type => "PtAccount", :password => "holycrap"}
       result = ActiveSupport::JSON.decode(response.body)
       response.response_code.should eql 400
       result["error"].should eql "#{I18n.t('request.bad_request')}: Either an api_token or email and password are required."
@@ -66,7 +66,7 @@ describe AccountsController do
     it "provides 400 error for pivotal tracker account type without password (or api_token)" do
       user = FactoryGirl.create :user   
       @request.env["HTTP_AUTHORIZATION"] = encode_credentials(user.auth_token)  
-      post :create, {:type => "pivotal_tracker", :email => "yabababab@sdghkld.com"}
+      post :create, {:type => "PtAccount", :email => "yabababab@sdghkld.com"}
       result = ActiveSupport::JSON.decode(response.body)
       response.response_code.should eql 400
       result["error"].should eql "#{I18n.t('request.bad_request')}: Either an api_token or email and password are required."
@@ -75,7 +75,7 @@ describe AccountsController do
     it "provides 401 error for incorrect email password combo" do
       user = FactoryGirl.create :user      
       @request.env["HTTP_AUTHORIZATION"] = encode_credentials(user.auth_token)
-      post :create, {:type => "pivotal_tracker", :email => "lordtestymctesticles@gmail.com", :password => "wrong password"}
+      post :create, {:type => "PtAccount", :email => "lordtestymctesticles@gmail.com", :password => "wrong password"}
       result = ActiveSupport::JSON.decode(response.body)
       response.response_code.should eql 401
     end

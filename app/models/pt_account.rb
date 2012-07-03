@@ -6,6 +6,7 @@ class PtAccount < Account
   attr_accessible :api_token
 
   validates_presence_of :api_token, :on => :create
+  validates_uniqueness_of :api_token
   
   # Retrieve a users api_token from PT using email and password
   def self.get_token(email, password)
@@ -54,22 +55,22 @@ class PtAccount < Account
 
   def fetch_stories(project)
     # project.stories = []
-    temp_story_mappings = []
+    temp_story_links = []
     external_project_link = self.external_project_links.detect { |pm| pm.project == project }
     if external_project_link
       PivotalTracker::Client.token = self.api_token
       PivotalTracker::Project.find(external_project_link.linked_id).stories.all.each do |ptStory|
-        existing_mapping = external_project_link.story_mappings.detect { |sm| sm.linked_id == ptStory.id }
-        if existing_mapping
-          update_story(existing_mapping.story, ptStory)
-          temp_story_mappings << existing_mapping
+        existing_link = external_project_link.external_story_links.detect { |esl| esl.linked_id == ptStory.id }
+        if existing_link
+          update_story(existing_link.story, ptStory)
+          temp_story_links << existing_link
         else
           ourStory = Story.new(title: ptStory.name, project: external_project_link.project)
-          new_mapping = StoryMapping.new(linked_id: ptStory.id, story: ourStory)
-          temp_story_mappings << new_mapping
+          new_link = ExternalStoryLink.new(linked_id: ptStory.id, story: ourStory)
+          temp_story_links << new_link
         end        
       end
-      external_project_link.story_mappings = temp_story_mappings
+      external_project_link.external_story_links = temp_story_links
     else
       # error handling
     end
