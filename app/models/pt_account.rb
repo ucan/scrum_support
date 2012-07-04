@@ -37,6 +37,7 @@ class PtAccount < Account
       PivotalTracker::Project.find(external_project_link.linked_id).memberships.all.each do |ptMembership|
         existing_membership = project.memberships.detect { |m| m.team_member.email == ptMembership.email }
         if existing_membership
+          team_member = existing_membership.team_member
           update_membership(existing_membership, ptMembership)
           temp_memberships << existing_membership
         else
@@ -46,8 +47,16 @@ class PtAccount < Account
           end
           temp_memberships << Membership.new(team_member: team_member, project: external_project_link.project)
         end
+        if team_member && self.email == team_member.email
+          self.team_member = team_member
+          self.save
+        else
+          puts "did not find teammember for #{self.email}"
+        end
       end
       project.memberships = temp_memberships
+      
+      me = TeamMember.where(email: self.email).first
     else
       # error handling...not found? not authorized?
     end  

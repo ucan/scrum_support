@@ -1,11 +1,13 @@
 class Account < ActiveRecord::Base
-
+  attr_accessible :email
   belongs_to :user, :inverse_of => :accounts
   has_and_belongs_to_many :external_project_links, :validate => true, :uniq => true#, :dependent => :destroy, :uniq => true, :validate => true#, :inverse_of => :account
   has_many :projects, :uniq => true, :through => :external_project_links
- 
+  belongs_to :team_member 
   validates_associated :user
   validates_presence_of :user
+  validates_presence_of :email
+  validates_uniqueness_of :email
  
   def fetch_projects
     raise NotImplementedError.new

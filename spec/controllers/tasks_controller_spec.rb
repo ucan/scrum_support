@@ -76,7 +76,7 @@ describe TasksController do
 
     it "allows partial modifications of tasks to be made" do
       task = FactoryGirl.create :task
-      user = FactoryGirl.create(:external_project_link).accounts.first.user
+      user = FactoryGirl.create(:external_project_link, project: task.story.project).accounts.first.user
       @request.env["HTTP_AUTHORIZATION"] = encode_credentials user.auth_token
       patch "modify", id: task.id, task: {status:"started"}
 

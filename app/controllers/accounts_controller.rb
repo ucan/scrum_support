@@ -47,7 +47,7 @@ class AccountsController < ApplicationController
       else
         PtAccount.get_token(params[:email], params[:password])
       end
-      ptAccount = PtAccount.new(api_token: api_token)
+      ptAccount = PtAccount.new(api_token: api_token, email: params[:email])
       current_user.accounts << ptAccount
       if (ptAccount.save)        
         # TODO do we need to add links to 'created', and 'error' responses?

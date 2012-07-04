@@ -15,10 +15,12 @@ ActiveRecord::Schema.define(:version => 20120630130107) do
 
   create_table "accounts", :force => true do |t|
     t.integer  "user_id"
+    t.integer  "team_member_id"
     t.string   "api_token"
+    t.string   "email"
     t.string   "type"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
   end
 
   add_index "accounts", ["api_token"], :name => "index_accounts_on_api_token", :unique => true

@@ -7,6 +7,9 @@ FactoryGirl.define do
   end
 
   factory :account do
+    sequence :email do |n|
+      "account.holder#{n}@testing.com"
+    end
     user
   end
 
