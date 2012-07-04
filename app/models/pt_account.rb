@@ -35,16 +35,16 @@ class PtAccount < Account
     if external_project_link      
       PivotalTracker::Client.token = self.api_token
       PivotalTracker::Project.find(external_project_link.linked_id).memberships.all.each do |ptMembership|
-        existing_membership = project.memberships.detect { |m| m.person.email == ptMembership.email }
+        existing_membership = project.memberships.detect { |m| m.team_member.email == ptMembership.email }
         if existing_membership
           update_membership(existing_membership, ptMembership)
           temp_memberships << existing_membership
         else
-          person = Person.where(email: ptMembership.email).first
-          if person.nil?
-            person = Person.new(name: ptMembership.name, email: ptMembership.email)
+          team_member = TeamMember.where(email: ptMembership.email).first
+          if team_member.nil?
+            team_member = TeamMember.new(name: ptMembership.name, email: ptMembership.email)
           end
-          temp_memberships << Membership.new(person: person, project: external_project_link.project)
+          temp_memberships << Membership.new(team_member: team_member, project: external_project_link.project)
         end
       end
       project.memberships = temp_memberships
@@ -108,7 +108,7 @@ class PtAccount < Account
   end
 
   def update_membership(membership, ptMembership)
-    membership.person.name = ptMembership.name
+    membership.team_member.name = ptMembership.name
   end
 
   def update_story(story, ptStory)

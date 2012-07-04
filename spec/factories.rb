@@ -14,7 +14,7 @@ FactoryGirl.define do
     user
   end
 
-  factory :person do
+  factory :team_member do
     sequence :email do |n|
       "fred#{n}@testing.com"
     end

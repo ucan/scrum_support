@@ -64,19 +64,12 @@ ActiveRecord::Schema.define(:version => 20120630130107) do
 
   create_table "memberships", :force => true do |t|
     t.integer  "project_id"
-    t.integer  "person_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.integer  "team_member_id"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
   end
 
-  add_index "memberships", ["project_id", "person_id"], :name => "index_memberships_on_project_id_and_person_id", :unique => true
-
-  create_table "people", :force => true do |t|
-    t.string   "name"
-    t.string   "email"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
+  add_index "memberships", ["project_id", "team_member_id"], :name => "index_memberships_on_project_id_and_team_member_id", :unique => true
 
   create_table "projects", :force => true do |t|
     t.string   "title"
@@ -101,6 +94,13 @@ ActiveRecord::Schema.define(:version => 20120630130107) do
   end
 
   add_index "tasks", ["story_id"], :name => "index_tasks_on_story_id"
+
+  create_table "team_members", :force => true do |t|
+    t.string   "name"
+    t.string   "email"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "users", :force => true do |t|
     t.string   "email"

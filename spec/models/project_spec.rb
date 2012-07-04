@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Project do
 
     before(:all) do
-        @person = FactoryGirl.create(:person)
+        @team_member = FactoryGirl.create(:team_member)
     end
 
 	before(:each) do
@@ -39,28 +39,28 @@ describe Project do
         @project.stories.should == [@story2]
     end
 
-    it "should create a new membership when a new person is added to a project" do
-        @project.people.should_not include(@person)
-        @project.people = [@person]
-        @project.people.should include(@person)
+    it "should create a new membership when a new team_member is added to a project" do
+        @project.team_members.should_not include(@team_member)
+        @project.team_members = [@team_member]
+        @project.team_members.should include(@team_member)
         @project.save()
         @project.memberships.length.should == 1
-        @project.memberships.first.person.should eql @person
+        @project.memberships.first.team_member.should eql @team_member
         @project.memberships.first.project.should eql @project 
     end
 
-    it "should throw a RecordInvalid error if a duplicate person is added to a project" do
-        @project.people.should_not include(@person)
-        @project.people = [@person]        
+    it "should throw a RecordInvalid error if a duplicate team_member is added to a project" do
+        @project.team_members.should_not include(@team_member)
+        @project.team_members = [@team_member]        
         @project.save
-        lambda { @project.people << @person }.should raise_error(ActiveRecord::RecordInvalid)
+        lambda { @project.team_members << @team_member }.should raise_error(ActiveRecord::RecordInvalid)
     end
 
     subject { @project } 
     it { should respond_to(:title) }  
     it { should respond_to(:stories) } 
     it { should respond_to(:memberships) }
-    it { should respond_to(:people) }
+    it { should respond_to(:team_members) }
     it { should be_valid }
 end
 

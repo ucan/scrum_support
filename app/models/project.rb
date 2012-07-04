@@ -3,7 +3,7 @@ class Project < ActiveRecord::Base
 
   has_many :stories, :dependent => :destroy, :uniq => true, :inverse_of => :project
   has_many :memberships, :dependent => :destroy, :uniq => true, :inverse_of => :project
-  has_many :people, :through => :memberships, :uniq => true
+  has_many :team_members, :through => :memberships, :uniq => true
 
   validates_presence_of :title
 

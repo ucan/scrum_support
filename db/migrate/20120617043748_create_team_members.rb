@@ -1,6 +1,6 @@
-class CreatePeople < ActiveRecord::Migration
+class CreateTeamMembers < ActiveRecord::Migration
   def change
-    create_table :people do |t|
+    create_table :team_members do |t|
       t.string :name
       t.string :email
 

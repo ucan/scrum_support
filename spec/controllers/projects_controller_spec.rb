@@ -64,8 +64,8 @@ describe ProjectsController do
     project = FactoryGirl.create(:project)
     external_project_link = FactoryGirl.create(:external_project_link, project: project)
     user = external_project_link.accounts[0].user
-    project.people << FactoryGirl.create(:person)
-    project.people << FactoryGirl.create(:person)
+    project.team_members << FactoryGirl.create(:team_member)
+    project.team_members << FactoryGirl.create(:team_member)
 
     @request.env["HTTP_AUTHORIZATION"] = encode_credentials(user.auth_token)
     get :show, {:id => project.id }
