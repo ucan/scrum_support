@@ -24,4 +24,5 @@ ScrumSupport::Application.routes.draw do
   #Tasks Controller
   get "/tasks" => "tasks#list"
   get "/tasks/:id" => "tasks#show", :constraints => id_constraints
+  match "/tasks/:id" => "tasks#modify", :via =>:patch, :constraints => id_constraints
 end

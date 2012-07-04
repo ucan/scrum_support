@@ -34,7 +34,14 @@ class TasksController < ApplicationController
     end
 
   end
-
+  
+  def modify
+    task = Task.find_by_id params[:id]
+    task.assign_attributes params[:task]
+    #task.person =
+    task.save!
+    render json: {task: task}
+  end
   private
 
   def authorized_account_for_project(project)

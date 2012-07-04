@@ -73,6 +73,18 @@ describe TasksController do
       result = ActiveSupport::JSON.decode response.body
       result["error"].should == I18n.t("request.forbidden")
     end
+
+    it "allows partial modifications of tasks to be made" do
+      task = FactoryGirl.create :task
+      user = FactoryGirl.create(:external_project_link).accounts.first.user
+      @request.env["HTTP_AUTHORIZATION"] = encode_credentials user.auth_token
+      patch "modify", id: task.id, task: {status:"started"}
+
+      result = ActiveSupport::JSON.decode response.body
+      task.reload
+      task.started?.should == true
+      result["task"]["status"].should eql "started"
+    end
   end
 
 end
