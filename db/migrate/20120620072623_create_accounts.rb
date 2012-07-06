@@ -8,6 +8,6 @@ class CreateAccounts < ActiveRecord::Migration
       t.string :type
       t.timestamps
     end
-    add_index :accounts, :api_token, unique: true 
+    add_index :accounts, :api_token, unique: true
   end
 end

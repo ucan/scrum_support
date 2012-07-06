@@ -2,8 +2,8 @@ class Task < ActiveRecord::Base
   attr_accessible :description, :story, :status
   belongs_to :story
 
-  belongs_to :owner, class_name: TeamMember 
-  validates_inclusion_of :status, :in => %w(not_started started blocked done)
+  belongs_to :owner, class_name: TeamMember
+  validates_inclusion_of :status, in: %w(not_started started blocked done)
 
   validates_presence_of :description, :story, :status
 
@@ -36,7 +36,7 @@ class Task < ActiveRecord::Base
   end
 
   def as_json(options = {})
-    super(:only => [:id, :description, :status])
+    super(only: [:id, :description, :status])
   end
 
   before_validation :init

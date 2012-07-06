@@ -5,7 +5,7 @@ class AccountsController < ApplicationController
   # Returns a list of account ids
   def list
     accounts = current_user.accounts
-    render json: { accounts: accounts, links: {} }, status: :ok # TODO links
+    render json: { accounts: accounts }, status: :ok
   end
 
   # Returns a list of projects for one of the users accounts
@@ -13,10 +13,10 @@ class AccountsController < ApplicationController
     begin
       # TODO fetch_projects
       account = current_user.accounts.find(params[:id]) #required as a part of the route
-      render json: {projects: account.projects, links: {} }, status: :ok # TODO links
+      render json: { projects: account.projects }, status: :ok
 
     rescue ActiveRecord::RecordNotFound
-      render json: {error: I18n.t('request.forbidden') }, status: :forbidden
+      render json: { error: I18n.t('request.forbidden') }, status: :forbidden
     end
   end
 
@@ -42,11 +42,10 @@ class AccountsController < ApplicationController
 
   def create_pivotal_tracker
     begin      
-      puts "#{params[:email]}  #{params[:password]}"
       api_token = PtAccount.get_token(params[:email], params[:password])
       ptAccount = PtAccount.new(api_token: api_token, email: params[:email])
       current_user.accounts << ptAccount
-      if (ptAccount.save)        
+      if (ptAccount.save)
         render json: { id: ptAccount.id, type: ptAccount.type, api_token: ptAccount.api_token }, :status => :created,
                       :location => url_for(controller: :accounts, action: :show, id: ptAccount.id)
         return

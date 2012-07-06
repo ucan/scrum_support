@@ -35,7 +35,7 @@ describe TasksController do
 
       get "list", project_id: unaccessable_task.story.project.id
       result = ActiveSupport::JSON.decode response.body
-      
+
       response.status.should == 403
       result["error"].should == I18n.t("request.forbidden")
     end
@@ -50,7 +50,7 @@ describe TasksController do
       result = ActiveSupport::JSON.decode response.body
       result["task"].should == task.as_json
     end
-    
+
     it "returns 404 when the task does not exist" do
       user = FactoryGirl.create :user
       @request.env["HTTP_AUTHORIZATION"] = encode_credentials user.auth_token

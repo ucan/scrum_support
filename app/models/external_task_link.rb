@@ -9,7 +9,7 @@ class ExternalTaskLink < ActiveRecord::Base
   before_destroy :destroy_task
 
   protected
-  def destroy_task  	
-  	task.destroy
+  def destroy_task
+    task.destroy
   end
 end

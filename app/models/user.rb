@@ -4,18 +4,18 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :api_key
 
   has_one :api_key
-  has_many :accounts, :dependent => :destroy, :uniq => true, :inverse_of => :user
+  has_many :accounts, dependent: :destroy, uniq: true, inverse_of: :user
 
   before_save :ensure_api_key
 
   validates_confirmation_of :password
-  validates_presence_of :password, :on => :create
+  validates_presence_of :password, on: :create
   validates_presence_of :email
   validates_uniqueness_of :email
   validate_email_format :email
 
   def as_json(options = {})
-    super(:only => [:email])
+    super(only: [:email])
   end
 
   def auth_token

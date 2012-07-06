@@ -29,4 +29,3 @@ describe ExternalStoryLink do
   it { should respond_to(:story) }
   it { should be_valid }
 end
-

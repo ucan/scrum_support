@@ -3,7 +3,7 @@ class CreateStories < ActiveRecord::Migration
     create_table :stories do |t|
       t.references :project
       t.string :title
-            
+
       t.timestamps
     end
   end

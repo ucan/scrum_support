@@ -6,6 +6,6 @@ class CreateExternalProjectLinks < ActiveRecord::Migration
 
       t.timestamps
     end
-    add_index :external_project_links, [ :project_id, :linked_id ], :unique => true #prevents duplicates
+    add_index :external_project_links, [ :project_id, :linked_id ], unique: true #prevents duplicates
   end
 end

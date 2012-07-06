@@ -1,13 +1,13 @@
 class PtAccount < Account
 
-# TODO Need to add begin/rescue to each fetch method of this class, 
-# to handle 502/503 responses from PT server
+  # TODO Need to add begin/rescue to each fetch method of this class,
+  # to handle 502/503 responses from PT server
 
   attr_accessible :api_token
 
-  validates_presence_of :api_token, :on => :create
+  validates_presence_of :api_token, on: :create
   validates_uniqueness_of :api_token
-  
+
   # Retrieve a users api_token from PT using email and password
   def self.get_token(email, password)
     PivotalTracker::Client.token(email, password)
@@ -15,24 +15,24 @@ class PtAccount < Account
 
   def fetch_projects
     PivotalTracker::Client.token = self.api_token
-  	PivotalTracker::Project.all.each do |ptProject|
+    PivotalTracker::Project.all.each do |ptProject|
       existing_mapping = ExternalProjectLink.where(linked_id: ptProject.id).first #self.external_project_links.detect { |pm| pm.linked_id == ptProject.id }
       if existing_mapping
         update_project(existing_mapping.project, ptProject)
         self.external_project_links << existing_mapping
-      else        
+      else
         ourProject = Project.new(title: ptProject.name)
         mapping = ExternalProjectLink.new(linked_id: ptProject.id, project: ourProject)
         mapping.accounts << self
         mapping.save!
       end
-  	end
+    end
   end
 
   def fetch_members(project)
     temp_memberships = []
     external_project_link = self.external_project_links.detect { |pm| pm.project == project }
-    if external_project_link      
+    if external_project_link
       PivotalTracker::Client.token = self.api_token
       PivotalTracker::Project.find(external_project_link.linked_id).memberships.all.each do |ptMembership|
         existing_membership = project.memberships.detect { |m| m.team_member.email == ptMembership.email }
@@ -60,7 +60,7 @@ class PtAccount < Account
       me = TeamMember.where(email: self.email).first
     else
       # error handling...not found? not authorized?
-    end  
+    end
   end
 
   def fetch_stories(project)
@@ -78,7 +78,7 @@ class PtAccount < Account
           ourStory = Story.new(title: ptStory.name, project: external_project_link.project)
           new_link = ExternalStoryLink.new(linked_id: ptStory.id, story: ourStory)
           temp_story_links << new_link
-        end        
+        end
       end
       external_project_link.external_story_links = temp_story_links
     else
@@ -87,7 +87,7 @@ class PtAccount < Account
   end
 
   def fetch_tasks(story)
-    temp_task_mappings = []    
+    temp_task_mappings = []
     PivotalTracker::Client.token = self.api_token
     external_project_link = self.external_project_links.detect { |pm| pm.project == story.project }
     story_mapping = external_project_link.story_mappings.detect { |sm| sm.story == story }
@@ -100,9 +100,9 @@ class PtAccount < Account
         else
           ourTask = Task.new(description: ptTask.description, story: story_mapping.story)
           temp_task_mappings << TaskMapping.new(linked_id: ptTask.id, task: ourTask)
-        end      
-      end   
-      story_mapping.task_mappings = temp_task_mappings   
+        end
+      end
+      story_mapping.task_mappings = temp_task_mappings
     else
       # error handling
     end

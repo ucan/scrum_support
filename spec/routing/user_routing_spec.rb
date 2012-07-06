@@ -22,4 +22,3 @@ describe UserController do
     put("/user?auth_token=#{u.auth_token}").should_not be_routable
   end
 end
-

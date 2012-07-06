@@ -34,8 +34,9 @@ class TasksController < ApplicationController
     end
 
   end
-  
+
   def modify
+    #TODO Check Permissions?
     task = Task.find_by_id params[:id]
     task.assign_attributes params[:task]
     account = authorized_account_for_project task.story.project

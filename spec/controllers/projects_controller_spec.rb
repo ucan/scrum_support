@@ -49,13 +49,13 @@ describe ProjectsController do
   it "should return a list of stories for a project" do
     project = FactoryGirl.create(:project)
     external_project_link = FactoryGirl.create(:external_project_link, project: project)
-    
+
     user = external_project_link.accounts[0].user
     project.stories << FactoryGirl.create(:story)
     project.stories << FactoryGirl.create(:story)
-    
+
     @request.env["HTTP_AUTHORIZATION"] = encode_credentials(user.auth_token)
-    get :show, {:id => project.id }
+    get :show, {id: project.id }
     result = ActiveSupport::JSON.decode(response.body)
     result["stories"].should =~ ActiveSupport::JSON.decode(project.stories.to_json)
   end
@@ -68,7 +68,7 @@ describe ProjectsController do
     project.team_members << FactoryGirl.create(:team_member)
 
     @request.env["HTTP_AUTHORIZATION"] = encode_credentials(user.auth_token)
-    get :show, {:id => project.id }
+    get :show, {id: project.id }
     result = ActiveSupport::JSON.decode(response.body)
 
     result["stories"].should =~ ActiveSupport::JSON.decode(project.stories.to_json)
@@ -77,7 +77,7 @@ describe ProjectsController do
   it "should provide an error if the project id is not valid" do
     user = FactoryGirl.create :user
     @request.env["HTTP_AUTHORIZATION"] = encode_credentials(user.auth_token)
-    get :show, { :id => 999999 }
+    get :show, { id: 999999 }
     result = ActiveSupport::JSON.decode response.body
     response.status.should eql 404
     result["error"].should eql I18n.t 'request.not_found'
@@ -90,10 +90,9 @@ describe ProjectsController do
     different_user = FactoryGirl.create :user
 
     @request.env["HTTP_AUTHORIZATION"] = encode_credentials(different_user.auth_token)
-    get :show, {:id => project.id }
+    get :show, {id: project.id }
     result = ActiveSupport::JSON.decode(response.body)
     result["error"].should_not eql nil
     result["error"].should eql I18n.t('request.forbidden')
   end
 end
-
