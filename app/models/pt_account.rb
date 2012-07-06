@@ -52,6 +52,7 @@ class PtAccount < Account
           self.save
         else
           puts "did not find teammember for #{self.email}"
+          # TODO inform user to check/change their email?
         end
       end
       project.memberships = temp_memberships

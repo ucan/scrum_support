@@ -24,8 +24,8 @@ class AccountsController < ApplicationController
     errors = ""
     # check if we are creating a pt account
     if params[:type] == "PtAccount"
-      if params[:api_token].nil? && (params[:email].nil? || params[:password].nil?)
-        errors << "Either an api_token or email and password are required."
+      if (params[:email].nil? || params[:password].nil?) # TODO login using email & api? params[:api_token].nil?
+        errors << "An email and password are required."
       else
         create_pivotal_tracker
         return
@@ -41,16 +41,12 @@ class AccountsController < ApplicationController
   protected
 
   def create_pivotal_tracker
-    begin
-      api_token = if params[:api_token]
-        params[:api_token]
-      else
-        PtAccount.get_token(params[:email], params[:password])
-      end
+    begin      
+      puts "#{params[:email]}  #{params[:password]}"
+      api_token = PtAccount.get_token(params[:email], params[:password])
       ptAccount = PtAccount.new(api_token: api_token, email: params[:email])
       current_user.accounts << ptAccount
       if (ptAccount.save)        
-        # TODO do we need to add links to 'created', and 'error' responses?
         render json: { id: ptAccount.id, type: ptAccount.type, api_token: ptAccount.api_token }, :status => :created,
                       :location => url_for(controller: :accounts, action: :show, id: ptAccount.id)
         return
