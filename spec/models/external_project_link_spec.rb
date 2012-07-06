@@ -4,7 +4,7 @@ describe ExternalProjectLink do
   before(:each) do
     account = FactoryGirl.create(:account)
     project = FactoryGirl.create(:project)
-    @external_project_link = FactoryGirl.create(:external_project_link, project: project) 
+    @external_project_link = FactoryGirl.create(:external_project_link, project: project)
     account.external_project_links << @external_project_link
   end
 
@@ -24,7 +24,7 @@ describe ExternalProjectLink do
     @external_project_link.accounts = []
     @external_project_link.should_not be_valid
     @external_project_link.should have(1).error_on(:accounts)
-    
+
   end
 
   subject { @external_project_link }

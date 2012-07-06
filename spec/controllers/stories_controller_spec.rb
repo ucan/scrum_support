@@ -8,7 +8,7 @@ describe StoriesController do
     # Supress unnecessary methods for controller tests
     a = Account.new
     $old_fetch_tasks = a.method(:fetch_tasks)
-    class Account 
+    class Account
       def fetch_tasks(story)
       end
     end
@@ -20,7 +20,7 @@ describe StoriesController do
       define_method($old_fetch_tasks.name, &$old_fetch_tasks)
     end
   end
-  
+
   it "should allow a user to retrieve a list of tasks for one of their stories" do
     external_project_link = FactoryGirl.create(:external_project_link)
     story = FactoryGirl.create(:story, project: external_project_link.project)
@@ -28,7 +28,7 @@ describe StoriesController do
     user = ExternalProjectLink.where(project_id: story.project.id).first.accounts.first.user
 
     @request.env["HTTP_AUTHORIZATION"] = encode_credentials(user.auth_token)
-    get :show, {:id => story.id }
+    get :show, {id: story.id }
 
     result = ActiveSupport::JSON.decode(response.body)
     result["tasks"].should =~ ActiveSupport::JSON.decode(story.tasks.to_json)
@@ -38,7 +38,7 @@ describe StoriesController do
     user = FactoryGirl.create :user
 
     @request.env["HTTP_AUTHORIZATION"] = encode_credentials(user.auth_token)
-    get :show, { :id => 1 }
+    get :show, { id: 1 }
 
     result = ActiveSupport::JSON.decode(response.body)
     response.status.should eql 404

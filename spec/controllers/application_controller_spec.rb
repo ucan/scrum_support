@@ -6,9 +6,9 @@ describe ApplicationController do
 
   before(:all) do
     Rails.application.routes.draw do
-        match '/authenticate' => "application#authenticate"
-        match '/user_from_auth_token' => "application#user_from_auth_token"
-      end
+      match '/authenticate' => "application#authenticate"
+      match '/user_from_auth_token' => "application#user_from_auth_token"
+    end
   end
 
   after(:all) do
@@ -22,7 +22,7 @@ describe ApplicationController do
     end
 
     it "should return nil for authenticated users" do
-      user = FactoryGirl.create :user 
+      user = FactoryGirl.create :user
       @request.env["HTTP_AUTHORIZATION"] = encode_credentials(user.auth_token)
       get :authenticate
       response.status.should eql 200

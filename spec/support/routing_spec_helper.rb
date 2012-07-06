@@ -7,7 +7,7 @@ shared_examples "an_api_controller" do |url, accepted_verbs|
 
       case verb
       when :get
-        get(url).should_not be_routable 
+        get(url).should_not be_routable
       when :post
         post(url).should_not be_routable
       when :put
@@ -22,7 +22,7 @@ shared_examples "an_api_controller" do |url, accepted_verbs|
     it "#{url} responds to #{verb.to_s}" do
       case verb
       when :get
-        get(url).should be_routable 
+        get(url).should be_routable
       when :post
         post(url).should be_routable
       when :put
@@ -33,4 +33,3 @@ shared_examples "an_api_controller" do |url, accepted_verbs|
     end
   end
 end
-

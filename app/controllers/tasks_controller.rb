@@ -34,11 +34,11 @@ class TasksController < ApplicationController
     end
 
   end
-  
+
   def modify
+    #TODO Check Permissions?
     task = Task.find_by_id params[:id]
     task.assign_attributes params[:task]
-    #task.person =
     task.save!
     render json: {task: task}
   end

@@ -23,11 +23,11 @@ FactoryGirl.define do
     end
   end
 
-  factory :external_project_link, :class => ExternalProjectLink do
+  factory :external_project_link, class: ExternalProjectLink do
     sequence :linked_id do |n|
       n
     end
-    
+
     project
     before(:create) {|epl| epl.accounts = [FactoryGirl.create(:account)]}
   end
@@ -45,7 +45,7 @@ FactoryGirl.define do
     project
   end
 
-  factory :external_story_link, :class => :ExternalStoryLink do
+  factory :external_story_link, class: :ExternalStoryLink do
     sequence :linked_id do |n|
       n
     end
@@ -60,7 +60,7 @@ FactoryGirl.define do
     story
   end
 
-  factory :external_task_link, :class => :ExternalTaskLink do
+  factory :external_task_link, class: :ExternalTaskLink do
     sequence :linked_id do |n|
       n
     end
@@ -69,4 +69,3 @@ FactoryGirl.define do
   end
 
 end
-

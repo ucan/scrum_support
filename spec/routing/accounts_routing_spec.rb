@@ -15,9 +15,9 @@ describe AccountsController do
 
   describe "/accounts/{id}" do
     it_behaves_like "an_api_controller", "/accounts/1", [:get]
-  
+
     it "routes to /show/n" do
-      u = FactoryGirl.create(:user) 
+      u = FactoryGirl.create(:user)
       get("/accounts/1?auth_token=#{u.auth_token}").should route_to(controller: "accounts", action: "show", id: "1")
     end
   end

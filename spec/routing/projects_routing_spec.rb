@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe ProjectsController do
-  describe "/projects" do 
+  describe "/projects" do
     it_behaves_like "an_api_controller", "/projects", [:get]
 
     it "routes to /list" do
