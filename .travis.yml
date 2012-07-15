@@ -2,6 +2,6 @@ language: ruby
 rvm:
   1.9.3
 script:
- - RAILS_ENV=test bundle exec rake --trace db:migrate test
+  - RAILS_ENV=test bundle exec rake db:migrate; bundle exec rake spec
 before_script:
  - psql -c 'create database scrum_support_test;' -U postgres
