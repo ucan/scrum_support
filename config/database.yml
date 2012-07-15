@@ -6,8 +6,7 @@
 development:
   adapter: postgresql
   database: scrum_support_dev
-  username: scrum_support
-  password: password
+  username: postgres
   pool: 5
   timeout: 5000
 
@@ -17,15 +16,13 @@ development:
 test:
   adapter: postgresql
   database: scrum_support_test
-  username: scrum_support
-  password: password
+  username: postgres
   pool: 5
   timeout: 5000
 
 production:
   adapter: postgresql
   database: scrum_support_prod
-  username: scrum_support
-  password: password
+  username: postgres
   pool: 5
   timeout: 5000
