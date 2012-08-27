@@ -44,6 +44,7 @@ class TasksController < ApplicationController
     task.save!
     render json: {task: task}
   end
+  
   private
 
   def authorized_account_for_project(project)

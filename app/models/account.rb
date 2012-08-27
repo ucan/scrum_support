@@ -25,10 +25,6 @@ class Account < ActiveRecord::Base
     raise NotImplementedError.new
   end
 
-  def sync
-    raise NotImplementedError.new
-  end
-
   def as_json(options = {})
     super(only: [:id, :type])
   end
