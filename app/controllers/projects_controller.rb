@@ -25,6 +25,7 @@ class ProjectsController < ApplicationController
             account.fetch_members(project)
             account.fetch_stories(project)
             project.reload 
+
             render json: { id: project.id, title: project.title, team_members: project.team_members, stories: project.stories }, status: :ok
             break
           end
