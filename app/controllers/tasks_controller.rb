@@ -36,14 +36,24 @@ class TasksController < ApplicationController
   end
 
   def modify
-    #TODO Check Permissions?
+    # TODO Check Permissions?
+    # TODO Update PT
     task = Task.find_by_id params[:id]
-    task.assign_attributes params[:task]
-    account = authorized_account_for_project task.story.project
-    task.owner = account.team_member
-    task.save!
-    render json: {task: task}
+    #task.assign_attributes params[:task]
+     
+    if params[:status]
+      task.status = params[:status]
+        if task.valid?
+          account = authorized_account_for_project task.story.project
+          task.owner = account.team_member
+          task.save!
+          render json: {task: task}
+        else
+          render json: {error: "#{I18n.t('request.bad_request')}. #{params[:status]} is not a valid status. Valid options: include #{%w(not_started started blocked done)}"}, status: :bad_request
+        end
+    end
   end
+  
   private
 
   def authorized_account_for_project(project)

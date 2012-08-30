@@ -78,9 +78,15 @@ describe TasksController do
       task = FactoryGirl.create :task
       user = FactoryGirl.create(:external_project_link, project: task.story.project).accounts.first.user
       @request.env["HTTP_AUTHORIZATION"] = encode_credentials user.auth_token
-      patch "modify", id: task.id, task: {status:"started"}
+      
+      #patch "modify", id: task.id, task: {status:"started"}
+
+      put "modify", id: task.id, status: "started"
+
+      #print "XXXXXXXXXXXXXX: #{response.body}"
 
       result = ActiveSupport::JSON.decode response.body
+
       task.reload
       task.started?.should == true
       result["task"]["status"].should eql "started"

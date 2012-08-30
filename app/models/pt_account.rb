@@ -16,15 +16,15 @@ class PtAccount < Account
   def fetch_projects
     PivotalTracker::Client.token = self.api_token
     PivotalTracker::Project.all.each do |ptProject|
-      existing_mapping = ExternalProjectLink.where(linked_id: ptProject.id).first #self.external_project_links.detect { |pm| pm.linked_id == ptProject.id }
-      if existing_mapping
-        update_project(existing_mapping.project, ptProject)
-        self.external_project_links << existing_mapping
+      existing_link = ExternalProjectLink.where(linked_id: ptProject.id).first #self.external_project_links.detect { |pm| pm.linked_id == ptProject.id }
+      if existing_link
+        update_project(existing_link.project, ptProject)
+        self.external_project_links << existing_link
       else
         ourProject = Project.new(title: ptProject.name)
-        mapping = ExternalProjectLink.new(linked_id: ptProject.id, project: ourProject)
-        mapping.accounts << self
-        mapping.save!
+        link = ExternalProjectLink.new(linked_id: ptProject.id, project: ourProject)
+        link.accounts << self
+        link.save!
       end
     end
   end
@@ -66,7 +66,7 @@ class PtAccount < Account
   def fetch_stories(project)
     # project.stories = []
     temp_story_links = []
-    external_project_link = self.external_project_links.detect { |pm| pm.project == project }
+    external_project_link = self.external_project_links.detect { |epl| epl.project == project }
     if external_project_link
       PivotalTracker::Client.token = self.api_token
       PivotalTracker::Project.find(external_project_link.linked_id).stories.all.each do |ptStory|
@@ -87,22 +87,22 @@ class PtAccount < Account
   end
 
   def fetch_tasks(story)
-    temp_task_mappings = []
+    temp_task_links = []
     PivotalTracker::Client.token = self.api_token
-    external_project_link = self.external_project_links.detect { |pm| pm.project == story.project }
-    story_mapping = external_project_link.story_mappings.detect { |sm| sm.story == story }
-    if story_mapping && external_project_link
-      PivotalTracker::Story.find(story_mapping.linked_id, external_project_link.linked_id).tasks.all.each do |ptTask|
-        existing_mapping = story_mapping.task_mappings.detect { |tm| tm.linked_id == ptTask.id }
-        if existing_mapping
-          update_task(existing_mapping.task, ptTask)
-          temp_task_mappings << existing_mapping
+    external_project_link = self.external_project_links.detect { |epl| epl.project == story.project }
+    external_story_link = external_project_link.external_story_links.detect { |esl| esl.story == story }
+    if external_story_link && external_project_link
+      PivotalTracker::Story.find(external_story_link.linked_id, external_project_link.linked_id).tasks.all.each do |ptTask|
+        existing_link = external_story_link.external_task_links.detect { |etl| etl.linked_id == ptTask.id }
+        if existing_link
+          update_task(existing_link.task, ptTask)
+          temp_task_links << existing_link
         else
-          ourTask = Task.new(description: ptTask.description, story: story_mapping.story)
-          temp_task_mappings << TaskMapping.new(linked_id: ptTask.id, task: ourTask)
+          ourTask = Task.new(description: ptTask.description, story: external_story_link.story)
+          temp_task_links << ExternalTaskLink.new(linked_id: ptTask.id, task: ourTask)
         end
       end
-      story_mapping.task_mappings = temp_task_mappings
+      external_story_link.external_task_links = temp_task_links
     else
       # error handling
     end

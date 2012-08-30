@@ -20,12 +20,12 @@ class ProjectsController < ApplicationController
     if project
       external_project_link = ExternalProjectLink.where(project_id: project.id).first
       if external_project_link
-        external_project_link.accounts.each do |account|
+        external_project_link.accounts.each do |account|  # TODO Can we clean this up with detect?
           if(account.user == current_user)
             account.fetch_members(project)
             account.fetch_stories(project)
-            project.reload
-            render json: { id: project.id, title: project.title, team_members: project.team_members, stories: project.stories }, status: :ok
+            project.reload 
+            render json: { id: project.id, title: project.title, team_members: project.team_members.as_json(project_id: project.id), stories: project.stories }, status: :ok
             break
           end
         end

@@ -60,7 +60,7 @@ describe AccountsController do
       post :create, { type: "PtAccount", password: "holycrap"}
       result = ActiveSupport::JSON.decode(response.body)
       response.response_code.should eql 400
-      result["error"].should eql "#{I18n.t('request.bad_request')}: Either an api_token or email and password are required."
+      result["error"].should eql "#{I18n.t('request.bad_request')}: An email and password are required."
     end
 
     it "provides 400 error for pivotal tracker account type without password (or api_token)" do
@@ -69,7 +69,7 @@ describe AccountsController do
       post :create, {type: "PtAccount", email: "yabababab@sdghkld.com"}
       result = ActiveSupport::JSON.decode(response.body)
       response.response_code.should eql 400
-      result["error"].should eql "#{I18n.t('request.bad_request')}: Either an api_token or email and password are required."
+      result["error"].should eql "#{I18n.t('request.bad_request')}: An email and password are required."
     end
 
     it "provides 401 error for incorrect email password combo" do

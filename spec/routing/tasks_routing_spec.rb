@@ -10,7 +10,7 @@ describe TasksController do
   end
 
   describe "/tasks/{id}" do
-    it_behaves_like "an_api_controller", "/tasks/1", [:get, :patch]
+    it_behaves_like "an_api_controller", "/tasks/1", [:get, :put, :patch]
 
     it "routes to #show" do
       get("/tasks/1").should route_to controller: "tasks", action: "show", id:"1"
