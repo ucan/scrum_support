@@ -15,4 +15,5 @@ class TeamMember < ActiveRecord::Base
   def get_task_for_project(project_id) 
   	tasks.detect { |t| t.story.project.id == project_id }
   end
+
 end

@@ -24,8 +24,14 @@ class ProjectsController < ApplicationController
           if(account.user == current_user)
             account.fetch_members(project)
             account.fetch_stories(project)
+<<<<<<< HEAD
             project.reload 
+            render json: { id: project.id, title: project.title, team_members: project.team_members.as_json(project_id: project.id), stories: project.stories }, status: :ok
+=======
+            project.reload
+
             render json: { id: project.id, title: project.title, team_members: project.team_members, stories: project.stories }, status: :ok
+>>>>>>> 28376333be83a72954869b43a30a38be8d035c0d
             break
           end
         end
