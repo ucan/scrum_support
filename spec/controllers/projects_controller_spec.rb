@@ -86,6 +86,7 @@ describe ProjectsController do
   it "should only allow access to the authenticated users stories" do
     story = FactoryGirl.create :story
     project = story.project
+    external_project_link = FactoryGirl.create(:external_project_link, project: project)
 
     different_user = FactoryGirl.create :user
 

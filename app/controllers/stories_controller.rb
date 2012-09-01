@@ -11,6 +11,9 @@ class StoriesController < ApplicationController
           if account.user == current_user
             account.fetch_tasks(story)
             story.reload
+
+            print "XXXXXXXXXXXXXXXXXXXXXXXXXXX: #{story.tasks.as_json}"
+
             render json: { tasks: story.tasks }, status: :ok
             break
           end

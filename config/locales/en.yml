@@ -7,4 +7,15 @@ en:
     unauthorized: "User is not authenticated" #401 :unauthorized
     forbidden: "Cannot access the resource requested, the user does not have access to it." #403 :forbidden
     not_found: "Requested resource cannot be found" #404
-    bad_request: "Bad request. Are all the required parameters present" #400
+    bad_request: "Bad request." #400
+
+  activerecord:
+    attributes:
+      task:
+        status: "Task status"
+    errors:
+      models:
+        task:
+          attributes:
+            status:
+              inclusion: "is invalid: %{value}."

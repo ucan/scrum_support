@@ -11,7 +11,7 @@ class TasksController < ApplicationController
         project.stories.each do |story|
           result.concat story.tasks
         end
-        render json: {tasks:result}
+        render json: {tasks: result}
       else
         render json: {error: I18n.t("request.forbidden")}, status: :forbidden
       end
@@ -36,21 +36,28 @@ class TasksController < ApplicationController
   end
 
   def modify
-    # TODO Check Permissions?
     # TODO Update PT
     task = Task.find_by_id params[:id]
     #task.assign_attributes params[:task]
-     
-    if params[:status]
-      task.status = params[:status]
+    if task
+      authorized_account = authorized_account_for_project task.story.project
+      if authorized_account
+        if params[:status]
+          task.status = params[:status]
+        end
         if task.valid?
           account = authorized_account_for_project task.story.project
           task.owner = account.team_member
           task.save!
           render json: {task: task}
         else
-          render json: {error: "#{I18n.t('request.bad_request')}. #{params[:status]} is not a valid status. Valid options: include #{%w(not_started started blocked done)}"}, status: :bad_request
+          render json: {error: "#{I18n.t('request.bad_request')}: #{task.errors.full_messages}"}, status: :bad_request
         end
+      else
+        render json: {error: I18n.t("request.forbidden")}, status: :forbidden
+      end
+    else
+      render json: {error: I18n.t("request.not_found")}, status: :not_found
     end
   end
   

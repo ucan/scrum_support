@@ -2,10 +2,14 @@ class AccountsController < ApplicationController
 
   before_filter :authenticate
 
-  # Returns a list of account ids
+  # Returns all the users accounts
   def list
-    accounts = current_user.accounts
-    render json: { accounts: accounts }, status: :ok
+    if current_user
+      accounts = current_user.accounts
+      render json: { accounts: accounts }, status: :ok
+    else
+      render json: { error: I18n.t('request.forbidden') }, status: :forbidden
+    end
   end
 
   # Returns a list of projects for one of the users accounts
@@ -46,8 +50,7 @@ class AccountsController < ApplicationController
       ptAccount = PtAccount.new(api_token: api_token, email: params[:email])
       current_user.accounts << ptAccount
       if (ptAccount.save)
-        render json: { id: ptAccount.id, type: ptAccount.type, api_token: ptAccount.api_token }, :status => :created,
-                      :location => url_for(controller: :accounts, action: :show, id: ptAccount.id)
+        render json: { account: ptAccount }, :status => :created
         return
       else
         # TODO Return 403 forbidden if account already exists

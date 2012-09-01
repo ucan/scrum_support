@@ -1,10 +1,10 @@
 class Task < ActiveRecord::Base
-  attr_accessible :description, :story, :status
+  attr_accessible :description, :story, :status, :valid_s
+  
   belongs_to :story
-
   belongs_to :owner, class_name: TeamMember
+  
   validates_inclusion_of :status, in: %w(not_started started blocked done)
-
   validates_presence_of :description, :story, :status
 
   def completed?

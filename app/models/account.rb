@@ -26,7 +26,7 @@ class Account < ActiveRecord::Base
   end
 
   def as_json(options = {})
-    super(only: [:id, :type])
+    super(only: [:id, :type, :email])
   end
 
 end

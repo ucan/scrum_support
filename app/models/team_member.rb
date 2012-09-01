@@ -12,7 +12,7 @@ class TeamMember < ActiveRecord::Base
     json
   end
 
-  def get_task_for_project(project_id) 
+  def get_task_for_project(project_id)
   	tasks.detect { |t| t.story.project.id == project_id }
   end
 

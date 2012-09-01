@@ -36,30 +36,35 @@ class PtAccount < Account
       PivotalTracker::Client.token = self.api_token
       PivotalTracker::Project.find(external_project_link.linked_id).memberships.all.each do |ptMembership|
         existing_membership = project.memberships.detect { |m| m.team_member.email == ptMembership.email }
+        
+        currentMember = nil
+
         if existing_membership
-          team_member = existing_membership.team_member
+          currentMember = existing_membership.team_member
           update_membership(existing_membership, ptMembership)
           temp_memberships << existing_membership
         else
-          team_member = TeamMember.where(email: ptMembership.email).first
-          if team_member.nil?
-            team_member = TeamMember.new(name: ptMembership.name, email: ptMembership.email)
+          currentMember = TeamMember.where(email: ptMembership.email).first
+          if currentMember.nil?
+            currentMember = TeamMember.new(name: ptMembership.name, email: ptMembership.email)
           end
-          temp_memberships << Membership.new(team_member: team_member, project: external_project_link.project)
+          temp_memberships << Membership.new(team_member: currentMember, project: external_project_link.project)
         end
-        if team_member && self.email == team_member.email
-          self.team_member = team_member
+        if currentMember && self.email == currentMember.email
+          self.team_member = currentMember
           self.save
-        else
-          puts "did not find teammember for #{self.email}"
-          # TODO inform user to check/change their email?
         end
       end
       project.memberships = temp_memberships
       
-      me = TeamMember.where(email: self.email).first
+      # me = TeamMember.where(email: self.email).first
     else
       # error handling...not found? not authorized?
+
+      if self.team_member.nil?
+        print "No team member found for #{self.email}"
+      end
+
     end
   end
 
