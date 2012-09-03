@@ -15,10 +15,13 @@ class AccountsController < ApplicationController
   # Returns a list of projects for one of the users accounts
   def show
     begin
-      # TODO fetch_projects
       account = current_user.accounts.find(params[:id]) #required as a part of the route
-      render json: { projects: account.projects }, status: :ok
-
+      if (account)
+        account.fetch_projects
+        render json: { projects: account.projects }, status: :ok
+      else
+        render json: { error: I18n.t('request.not_found') }, status: :not_found
+      end
     rescue ActiveRecord::RecordNotFound
       render json: { error: I18n.t('request.forbidden') }, status: :forbidden
     end
@@ -50,6 +53,7 @@ class AccountsController < ApplicationController
       ptAccount = PtAccount.new(api_token: api_token, email: params[:email])
       current_user.accounts << ptAccount
       if (ptAccount.save)
+        ptAccount.fetch_projects
         render json: { account: ptAccount }, :status => :created
         return
       else
