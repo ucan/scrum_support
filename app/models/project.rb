@@ -14,5 +14,6 @@ class Project < ActiveRecord::Base
   def as_json(options = {})
     super(only: [:id, :title])
   end
+  
 
 end
