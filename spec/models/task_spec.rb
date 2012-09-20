@@ -5,39 +5,53 @@ require 'project'
 describe Task do
 
   before(:each) do
-    @project = FactoryGirl.create(:project)
-    @story = FactoryGirl.create(:story, project: @project)
-    @task1 = FactoryGirl.build(:task, story: @story)
+    @story = FactoryGirl.create(:story)
+    @task = FactoryGirl.build(:task, story: @story)
   end
 
   it "should not be valid without a description" do
-    @task1.description = nil
-    @task1.should have(1).error_on(:description)
-    @task1.should_not be_valid
+    @task.description = nil
+    @task.should have(1).error_on(:description)
+    @task.should_not be_valid
   end
 
   it "should not be valid without a story" do
-    @task1.story = nil
-    @task1.should have(1).error_on(:story)
-    @task1.should_not be_valid
+    @task.story = nil
+    @task.should have(1).error_on(:story)
+    @task.should_not be_valid
   end
 
   it "should have a valid default status" do
-    @task1.status.should eql nil
-    @task1.valid?
-    @task1.should be_valid
-    @task1.not_started?.should eql true
+    @task.status.should eql nil
+    @task.valid?
+    @task.should be_valid
+    @task.not_started?.should eql true
   end
 
   it "should be able to change its status" do
-    @task1.valid?
-    @task1.not_started?.should eql true
-    @task1.start
-    @task1.started?.should eql true
-    @task1.block
-    @task1.blocked?.should eql true
-    @task1.completed?.should eql false
-    @task1.complete
-    @task1.completed?.should eql true
+    @task.valid?
+    @task.not_started?.should eql true
+    @task.start
+    @task.started?.should eql true
+    @task.block
+    @task.blocked?.should eql true
+    @task.completed?.should eql false
+    @task.complete
+    @task.completed?.should eql true
   end
+
+  it "should be able to have a TeamMember as an owner" do
+    @task.valid?
+    @task.owner.should eql nil
+    team_member = FactoryGirl.create(:team_member)
+    @task.owner = team_member
+    @task.owner.should eql team_member
+  end
+
+  subject { @task }
+  it { should respond_to(:description) }
+  it { should respond_to(:story) }
+  it { should respond_to(:status) }
+  it { should respond_to(:owner) }
+  it { should be_valid }
 end

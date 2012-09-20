@@ -1,9 +1,11 @@
 class Account < ActiveRecord::Base
   attr_accessible :email
+
   belongs_to :user, inverse_of: :accounts
   has_and_belongs_to_many :external_project_links, validate: true, uniq: true#, dependent: :destroy, uniq: true, validate: true#, inverse_of: :account
   has_many :projects, uniq: true, through: :external_project_links
   belongs_to :team_member 
+  
   validates_associated :user
   validates_presence_of :user
   validates_presence_of :email
@@ -13,11 +15,15 @@ class Account < ActiveRecord::Base
     raise NotImplementedError.new
   end
 
+  def fetch_iterations(project)
+    raise NotImplementedError.new
+  end
+
   def fetch_members(project)
     raise NotImplementedError.new
   end
 
-  def fetch_stories(project)
+  def fetch_stories(iteration)
     raise NotImplementedError.new
   end
 
@@ -26,7 +32,6 @@ class Account < ActiveRecord::Base
   end
 
   def as_json(options = {})
-    super(only: [:id, :type, :email])
+    super(only: [:id, :type, :email, :team_member])
   end
-
 end

@@ -8,8 +8,6 @@ describe Project do
 
   before(:each) do
     @project = FactoryGirl.create(:project)
-    @story1 = FactoryGirl.build(:story, project: @project)
-    @story2 = FactoryGirl.build(:story, project: @project)
   end
 
   it "should not be valid without a title" do
@@ -18,25 +16,30 @@ describe Project do
     @project.should_not be_valid
   end
 
-  it "should be able to add 1 or more storys" do
-    @project.stories.should be_empty
-    @project.stories << @story1
-    @project.stories.should =~ [@story1]
-    @project.stories << @story2
-    @project.stories.should =~ [@story1, @story2]
+  it "should be able to add 1 or more iterations" do
+    @project.iterations.should be_empty
+    it1 = FactoryGirl.create(:iteration)
+    @project.iterations << it1
+    @project.iterations.should =~ [it1]
+    it2 = FactoryGirl.create(:iteration)
+    @project.iterations << it2
+    @project.iterations.should =~ [it1, it2]
   end
 
-  it "should not be able to add a duplicate story" do
-    @project.stories << @story1 << @story1
-    @project.stories.length.should == 1
-    @project.stories.should == [@story1]
+  it "should not be able to add a duplicate iteration" do
+    it1 = FactoryGirl.create(:iteration)
+    @project.iterations << it1 << it1
+    @project.iterations.length.should == 1
+    @project.iterations.should eql [it1]
   end
 
-  it "should be able to remove 1 story" do
-    @project.stories << @story1 << @story2
-    @project.stories.delete(@story1)
-    @project.stories.should_not include(@story1)
-    @project.stories.should == [@story2]
+  it "should be able to remove 1 iteration" do
+    it1 = FactoryGirl.create(:iteration)
+    it2 = FactoryGirl.create(:iteration)
+    @project.iterations << it1 << it2
+    @project.iterations.delete(it2)
+    @project.iterations.should_not include(it2)
+    @project.iterations.should eql [it1]
   end
 
   it "should create a new membership when a new team_member is added to a project" do
@@ -58,8 +61,11 @@ describe Project do
 
   subject { @project }
   it { should respond_to(:title) }
-  it { should respond_to(:stories) }
+  it { should respond_to(:iterations) }
   it { should respond_to(:memberships) }
   it { should respond_to(:team_members) }
+  it { should respond_to(:current_iteration_id) }
+  it { should respond_to(:backlog) }
+  it { should respond_to(:current_iteration) }
   it { should be_valid }
 end

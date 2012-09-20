@@ -34,11 +34,17 @@ describe Account do
     account.projects.length.should eql 1
   end
 
-  it "should raise a NotImplementedError on fetch_projects" do
-    lambda { @account.fetch_projects }.should raise_error(NotImplementedError)
+  # it "should raise a NotImplementedError on fetch_projects" do
+  #   lambda { @account.fetch_projects }.should raise_error(NotImplementedError)
+  # end
+
+  it "should allow a team_member to be linked with a user" do
+    pending "Probably should check constraints here...team_member.email == account.email? #{__FILE__}"
   end
 
   subject { @account }
+  it { should respond_to(:email) }
+  it { should respond_to(:team_member) }
   it { should respond_to(:user) }
   it { should respond_to(:external_project_links) }
   it { should respond_to(:projects) }

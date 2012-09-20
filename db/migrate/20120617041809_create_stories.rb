@@ -1,7 +1,7 @@
 class CreateStories < ActiveRecord::Migration
   def change
     create_table :stories do |t|
-      t.references :project
+      t.references :iteration
       t.string :title
 
       t.timestamps

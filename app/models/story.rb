@@ -1,12 +1,15 @@
 class Story < ActiveRecord::Base
-  attr_accessible :title, :project
 
-  belongs_to :project, inverse_of: :stories
+  # TODO add status - plus add to json
+
+  attr_accessible :title, :iteration
+
+  belongs_to :iteration, inverse_of: :stories
   has_many :tasks, uniq: true, dependent: :destroy, inverse_of: :story
 
   validates_presence_of :title
-  validates_associated :project
-  validates_presence_of :project
+  validates_associated :iteration
+  validates_presence_of :iteration
 
   def to_s
     @title

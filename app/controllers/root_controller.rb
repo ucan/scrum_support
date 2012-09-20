@@ -4,6 +4,7 @@ class RootController < ApplicationController
     links = { links:
               {  user: "/user",
                  accounts: "/accounts",
+                 iterations: "/iterations",
                  projects: "/projects",
                  stories: "/stories",
                  tasks: "/tasks"

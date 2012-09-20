@@ -1,5 +1,9 @@
 ScrumSupport::Application.routes.draw do
 
+  get "iterations/list"
+
+  get "iterations/show"
+
   #devise_for :users, skip: :sessions
 
   root to: "root#index", via: [:get]
@@ -18,7 +22,12 @@ ScrumSupport::Application.routes.draw do
   get "/projects" => "projects#list"
   get "/projects/:id" => "projects#show", constraints: id_constraints
 
+  #Iterations Controller
+  get "/iterations" => "iterations#list"
+  get "/iterations/:id" => "iterations#show", constraints: id_constraints
+  
   #Stories Controller
+  get "/stories" => "stories#list"
   get "/stories/:id" => "stories#show", constraints: id_constraints
 
   #Tasks Controller

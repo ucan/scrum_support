@@ -2,7 +2,7 @@ class AccountsController < ApplicationController
 
   before_filter :authenticate
 
-  # Returns all the users accounts
+  # Returns all the users accounts (basic details)
   def list
     if current_user
       accounts = current_user.accounts
@@ -18,15 +18,17 @@ class AccountsController < ApplicationController
       account = current_user.accounts.find(params[:id]) #required as a part of the route
       if (account)
         account.fetch_projects
-        render json: { projects: account.projects }, status: :ok
-      else
-        render json: { error: I18n.t('request.not_found') }, status: :not_found
+        account.reload
+        json = account.as_json
+        json["projects"] = account.projects
+        render json: { account: json }, status: :ok
       end
     rescue ActiveRecord::RecordNotFound
       render json: { error: I18n.t('request.forbidden') }, status: :forbidden
     end
   end
 
+  # Returns a newly created account (including all projects for that account)
   def create
     errors = ""
     # check if we are creating a pt account
@@ -47,6 +49,7 @@ class AccountsController < ApplicationController
 
   protected
 
+  # TODO should creating an account return all the projects accounts, or just the accounts basic details?
   def create_pivotal_tracker
     begin      
       api_token = PtAccount.get_token(params[:email], params[:password])
@@ -54,7 +57,10 @@ class AccountsController < ApplicationController
       current_user.accounts << ptAccount
       if (ptAccount.save)
         ptAccount.fetch_projects
-        render json: { account: ptAccount }, :status => :created
+        ptAccount.reload
+        json = ptAccount.as_json
+        json["projects"] = ptAccount.projects
+        render json: { account: json }, :status => :created
         return
       else
         # TODO Return 403 forbidden if account already exists

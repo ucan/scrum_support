@@ -6,6 +6,12 @@ describe StoriesController do
   it "routes to /show/n" do
     u = FactoryGirl.create(:user)
     u.save!
+    get("/stories?auth_token=#{u.auth_token}").should route_to(controller: "stories", action: "list")
+  end
+
+  it "routes to /show/n" do
+    u = FactoryGirl.create(:user)
+    u.save!
     get("/stories/1?auth_token=#{u.auth_token}").should route_to(controller: "stories", action: "show", id: "1")
   end
 end

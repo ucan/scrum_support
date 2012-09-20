@@ -36,6 +36,25 @@ Spork.prefork do
     # rspec-rails.
     config.infer_base_class_for_anonymous_controllers = false
   end
+
+  a = Account.new
+  $old_fetch_projects = a.method(:fetch_projects)
+  $old_fetch_iterations = a.method(:fetch_iterations)
+  $old_fetch_members = a.method(:fetch_members)
+  $old_fetch_stories = a.method(:fetch_stories)
+  $old_fetch_tasks = a.method(:fetch_tasks)
+  class Account
+    def fetch_projects
+    end
+    def fetch_iterations(project)
+    end
+    def fetch_members(project)
+    end
+    def fetch_stories(iteration)
+    end
+    def fetch_tasks(story)
+    end
+  end
 end
 
 Spork.each_run do

@@ -1,5 +1,5 @@
 class Task < ActiveRecord::Base
-  attr_accessible :description, :story, :status, :valid_s
+  attr_accessible :description, :story, :status
   
   belongs_to :story
   belongs_to :owner, class_name: TeamMember
@@ -36,7 +36,7 @@ class Task < ActiveRecord::Base
   end
 
   def as_json(options = {})
-    super(only: [:id, :description, :status])
+    super(only: [:id, :description, :status, :owner])
   end
 
   before_validation :init

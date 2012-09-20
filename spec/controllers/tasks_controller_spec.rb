@@ -5,46 +5,54 @@ describe TasksController do
   include ActionController::HttpAuthentication::Token
 
   describe "list" do
-
-    it "lists all the tasks for a project" do
-      task = FactoryGirl.create(:task)
-      task2 = FactoryGirl.create(:task, story: task.story)
-      user = FactoryGirl.create(:external_project_link, project: task.story.project).accounts.first.user
+    it "returns all the tasks for a story" do
+      task1 = FactoryGirl.create(:task)
+      task2 = FactoryGirl.create(:task, story: task1.story)
+      user = FactoryGirl.create(:external_project_link, project: task1.story.iteration.project).accounts.first.user
       @request.env["HTTP_AUTHORIZATION"] = encode_credentials(user.auth_token)
-      get "list", project_id: task.story.project
+      get "list", story_id: task1.story.id
 
       result = ActiveSupport::JSON.decode response.body
       result["tasks"].count.should eql 2
-      result["tasks"].should =~ [task, task2].as_json
+      result["tasks"].should =~ [task1, task2].as_json
     end
 
-    it "returns 404 when the project does not exist" do
+    it "returns 404:not_found when the story does not exist" do
       user = FactoryGirl.create :user
       @request.env["HTTP_AUTHORIZATION"] = encode_credentials user.auth_token
-      get "list", project_id: 9999
+      get "list", story_id: 9999
       response.status.should eql 404
       result = ActiveSupport::JSON.decode response.body
       result["error"].should eql I18n.t("request.not_found")
     end
 
-    it "denies access to projects that do not belong to the user" do
+    it "denies access to tasks for stories that the user is not authorized to view" do
       unaccessable_task = FactoryGirl.create(:task)
       user = FactoryGirl.create :user
-      FactoryGirl.create(:external_project_link, project: unaccessable_task.story.project)
+      FactoryGirl.create(:external_project_link, project: unaccessable_task.story.iteration.project)
       @request.env["HTTP_AUTHORIZATION"] = encode_credentials user.auth_token
 
-      get "list", project_id: unaccessable_task.story.project.id
+      get "list", story_id: unaccessable_task.story.id
       result = ActiveSupport::JSON.decode response.body
 
       response.status.should == 403
       result["error"].should == I18n.t("request.forbidden")
     end
+
+    it "provides feedback on bad requests" do
+      user = FactoryGirl.create :user
+      @request.env["HTTP_AUTHORIZATION"] = encode_credentials user.auth_token
+      get "list" # Needs a story_id query parameter to be a valid request
+      result = ActiveSupport::JSON.decode response.body
+      response.status.should == 400
+      result["error"].should == "#{I18n.t('request.bad_request')}: story_id is required."
+    end
   end
 
   describe "show" do
-    it "shows a task" do
+    it "returns a task with the queried id" do
       task  = FactoryGirl.create :task
-      user = FactoryGirl.create(:external_project_link, project: task.story.project).accounts.first.user
+      user = FactoryGirl.create(:external_project_link, project: task.story.iteration.project).accounts.first.user
       @request.env["HTTP_AUTHORIZATION"] = encode_credentials user.auth_token
       get "show", id: task.id
       result = ActiveSupport::JSON.decode response.body
@@ -63,7 +71,7 @@ describe TasksController do
 
     it "denies access to tasks that the user does not have access to" do
       unaccessable_task = FactoryGirl.create :task
-      FactoryGirl.create(:external_project_link, project: unaccessable_task.story.project)
+      FactoryGirl.create(:external_project_link, project: unaccessable_task.story.iteration.project)
       user = FactoryGirl.create :user
       @request.env["HTTP_AUTHORIZATION"] = encode_credentials user.auth_token
 
@@ -78,7 +86,7 @@ describe TasksController do
   describe "modify" do
     it "allows partial modifications of tasks to be made" do
       task = FactoryGirl.create :task
-      user = FactoryGirl.create(:external_project_link, project: task.story.project).accounts.first.user
+      user = FactoryGirl.create(:external_project_link, project: task.story.iteration.project).accounts.first.user
       @request.env["HTTP_AUTHORIZATION"] = encode_credentials user.auth_token
       
       #patch "modify", id: task.id, task: {status:"started"}
@@ -96,7 +104,7 @@ describe TasksController do
 
     it "denies modification of tasks that the user does not have access to" do
       unaccessable_task = FactoryGirl.create :task
-      FactoryGirl.create(:external_project_link, project: unaccessable_task.story.project)
+      FactoryGirl.create(:external_project_link, project: unaccessable_task.story.iteration.project)
       user = FactoryGirl.create :user
       @request.env["HTTP_AUTHORIZATION"] = encode_credentials user.auth_token
 
@@ -120,7 +128,7 @@ describe TasksController do
     it "prevents modifications which would result in the task being invalid" do
       #Setup request
       task = FactoryGirl.create :task
-      user = FactoryGirl.create(:external_project_link, project: task.story.project).accounts.first.user
+      user = FactoryGirl.create(:external_project_link, project: task.story.iteration.project).accounts.first.user
       @request.env["HTTP_AUTHORIZATION"] = encode_credentials user.auth_token
 
       # Try to munt the task on the server

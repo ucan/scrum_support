@@ -7,5 +7,6 @@ class CreateExternalTaskLinks < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :external_task_links, [ :task_id, :linked_id ], unique: true #prevents duplicates
   end
 end

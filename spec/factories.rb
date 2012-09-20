@@ -30,7 +30,6 @@ FactoryGirl.define do
     sequence :linked_id do |n|
       n
     end
-
     project
     before(:create) {|epl| epl.accounts = [FactoryGirl.create(:account)]}
   end
@@ -41,11 +40,23 @@ FactoryGirl.define do
     end
   end
 
+  factory :iteration do
+    project
+  end
+
+  factory :external_iteration_link do
+    sequence :linked_id do |n|
+      n
+    end
+    iteration
+    external_project_link
+  end
+
   factory :story do
     sequence :title do |n|
       "story#{n}"
     end
-    project
+    iteration
   end
 
   factory :external_story_link, class: :ExternalStoryLink do
@@ -53,7 +64,7 @@ FactoryGirl.define do
       n
     end
     story
-    external_project_link
+    external_iteration_link
   end
 
   factory :task do

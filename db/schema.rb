@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120630130107) do
+ActiveRecord::Schema.define(:version => 20120919101950) do
 
   create_table "accounts", :force => true do |t|
     t.integer  "user_id"
@@ -39,6 +39,16 @@ ActiveRecord::Schema.define(:version => 20120630130107) do
 
   add_index "api_keys", ["auth_token"], :name => "index_api_keys_on_auth_token", :unique => true
 
+  create_table "external_iteration_links", :force => true do |t|
+    t.integer  "linked_id"
+    t.integer  "external_project_link_id"
+    t.integer  "iteration_id"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+  end
+
+  add_index "external_iteration_links", ["iteration_id", "linked_id"], :name => "index_external_iteration_links_on_iteration_id_and_linked_id", :unique => true
+
   create_table "external_project_links", :force => true do |t|
     t.integer  "linked_id"
     t.integer  "project_id"
@@ -50,11 +60,13 @@ ActiveRecord::Schema.define(:version => 20120630130107) do
 
   create_table "external_story_links", :force => true do |t|
     t.integer  "linked_id"
-    t.integer  "external_project_link_id"
+    t.integer  "external_iteration_link_id"
     t.integer  "story_id"
-    t.datetime "created_at",               :null => false
-    t.datetime "updated_at",               :null => false
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
   end
+
+  add_index "external_story_links", ["story_id", "linked_id"], :name => "index_external_story_links_on_story_id_and_linked_id", :unique => true
 
   create_table "external_task_links", :force => true do |t|
     t.integer  "linked_id"
@@ -62,6 +74,14 @@ ActiveRecord::Schema.define(:version => 20120630130107) do
     t.integer  "task_id"
     t.datetime "created_at",             :null => false
     t.datetime "updated_at",             :null => false
+  end
+
+  add_index "external_task_links", ["task_id", "linked_id"], :name => "index_external_task_links_on_task_id_and_linked_id", :unique => true
+
+  create_table "iterations", :force => true do |t|
+    t.integer  "project_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "memberships", :force => true do |t|
@@ -75,15 +95,16 @@ ActiveRecord::Schema.define(:version => 20120630130107) do
 
   create_table "projects", :force => true do |t|
     t.string   "title"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.integer  "current_iteration_id"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
   end
 
   create_table "stories", :force => true do |t|
-    t.integer  "project_id"
+    t.integer  "iteration_id"
     t.string   "title"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   create_table "tasks", :force => true do |t|
