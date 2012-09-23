@@ -8,12 +8,13 @@ class TeamMember < ActiveRecord::Base
   
   def as_json(options = {})
     json = super(only: [:id, :name, :email])
-    json['task'] = get_task_for_project(options[:project_id]) 
+    if options[:project_id]
+      json['task'] = get_task_for_project(options[:project_id]) 
+    end
     json
   end
 
   def get_task_for_project(project_id)
   	tasks.detect { |t| t.story.project.id == project_id }
   end
-
 end

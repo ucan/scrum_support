@@ -60,7 +60,7 @@ class AccountsController < ApplicationController
         ptAccount.reload
         json = ptAccount.as_json
         json["projects"] = ptAccount.projects
-        render json: { account: json }, :status => :created
+        render json: { account: json }, status: :created
         return
       else
         # TODO Return 403 forbidden if account already exists

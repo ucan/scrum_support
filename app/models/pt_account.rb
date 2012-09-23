@@ -30,7 +30,7 @@ class PtAccount < Account
   end
 
   # Fetches all iterations/stories/tasks from PT
-  def fetch_iterations(project)
+  def fetch_iterations(project)   
     PivotalTracker::Client.token = self.api_token
     epl = ExternalProjectLink.where(project_id: project.id).first
     if epl
@@ -42,12 +42,12 @@ class PtAccount < Account
           if existing_link
             update_iteration(existing_link.iteration, ptIteration)
             epl.external_iteration_links << existing_link
-            create_stories(existing_link, ptIteration)
+            #create_stories(existing_link, ptIteration)
           else
             ourIteration = Iteration.new(project: project)
             new_link = ExternalIterationLink.new(linked_id: ptIteration.id, iteration: ourIteration)
             epl.external_iteration_links << new_link
-            create_stories(new_link, ptIteration)
+            #create_stories(new_link, ptIteration)
             new_link.save!
           end
         end
@@ -92,8 +92,29 @@ class PtAccount < Account
     end
   end
 
-  def fetch_stories(iteration) ## TODO !!!!!!!!!!!!!!!!!!
-    fetch_iterations(iteration.project)
+  def fetch_stories(iteration)
+    PivotalTracker::Client.token = self.api_token
+    epl = ExternalProjectLink.where(project_id: iteration.project.id).first
+    if epl
+      ptProject = PivotalTracker::Project.find(epl.linked_id)
+      update_project(iteration.project, ptProject)
+      if ptProject
+        options = {limit: '1', offset: iteration.project.iterations.index(iteration).to_s}
+        print "\nITERATION_COUNT: #{PivotalTracker::Iteration.all(ptProject, {limit: 1}).count}\n"
+        ptIteration = PivotalTracker::Iteration.all(ptProject, limit: 1).first
+        if ptIteration
+          print "\nIt.id: #{iteration.id}, ptId.id: #{ptIteration.id}"
+        else
+          print "\nOh shit"
+        end
+      end
+    end
+
+    # type = if iteration.id == current_iteration_id "current"
+    # elsif iteration.id > current_iteration_id "backlog"
+    # else "done"
+    # end   
+    # fetch_iterations({project: iteration.project, type: type})
   end
 
   def fetch_tasks(story)
@@ -188,5 +209,13 @@ class PtAccount < Account
       end
       esl.save
     end
+  end
+
+  def fetch_all_iterations(project)
+
+  end
+
+  def fetch_iterations_of_type(project, type)
+
   end
 end

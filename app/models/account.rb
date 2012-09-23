@@ -4,7 +4,7 @@ class Account < ActiveRecord::Base
   belongs_to :user, inverse_of: :accounts
   has_and_belongs_to_many :external_project_links, validate: true, uniq: true#, dependent: :destroy, uniq: true, validate: true#, inverse_of: :account
   has_many :projects, uniq: true, through: :external_project_links
-  belongs_to :team_member 
+  belongs_to :team_member, class_name: TeamMember
   
   validates_associated :user
   validates_presence_of :user
@@ -15,7 +15,7 @@ class Account < ActiveRecord::Base
     raise NotImplementedError.new
   end
 
-  def fetch_iterations(project)
+  def fetch_iterations(options = {})
     raise NotImplementedError.new
   end
 
@@ -32,6 +32,8 @@ class Account < ActiveRecord::Base
   end
 
   def as_json(options = {})
-    super(only: [:id, :type, :email, :team_member])
+    json = super(only: [:id, :type, :email])
+    json[:team_member] = self.team_member # Not sure why this can't be included in the only: block
+    json
   end
 end

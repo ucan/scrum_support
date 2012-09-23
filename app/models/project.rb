@@ -7,11 +7,6 @@ class Project < ActiveRecord::Base
 
   validates_presence_of :title
 
-  # before_create :init
-  # def init
-  #   self.current_iteration_id ||= -1
-  # end
-
   def to_s
     @title
   end
