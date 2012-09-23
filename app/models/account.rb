@@ -33,7 +33,7 @@ class Account < ActiveRecord::Base
 
   def as_json(options = {})
     json = super(only: [:id, :type, :email])
-    json[:team_member] = self.team_member # Not sure why this can't be included in the only: block
+    json["team_member"] = self.team_member # Not sure why this can't be included in the only: block
     json
   end
 end

@@ -46,7 +46,7 @@ describe ProjectsController do
       @request.env["HTTP_AUTHORIZATION"] = encode_credentials(user.auth_token)
       get :show, {id: project.id }
       result = ActiveSupport::JSON.decode(response.body)
-      result["project"]["team_members"].should =~ [tm1, tm2].as_json
+      result["project"]["team_members"].should =~ [tm1, tm2].as_json(project_id: project.id)
     end
 
     it "should provide an error if the project id is not valid" do
