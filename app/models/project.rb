@@ -18,6 +18,7 @@ class Project < ActiveRecord::Base
   def current_iteration
     iterations.where(id: :current_iteration_id).first
   end
+  
 
   def backlog
     iterations.where("id > ?", self.current_iteration_id)
